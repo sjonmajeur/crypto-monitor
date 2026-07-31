@@ -55,8 +55,11 @@ Zet in `.env.local` (en op Netlify) `NEXT_PUBLIC_SANDBOX=true`. Dan:
   "Vul cart met demo-items" en "Reset sandbox" (annuleert + verwijdert
   testorders en zet de voorraad terug naar de vastgelegde startwaarden).
 
-Staat de variabele uit, dan bestaat `/sandbox` niet (404) en is de balk
-weg — zelfde build, één codepad.
+Staat de variabele uit, dan bestaat `/sandbox` niet (harde 404 via
+`proxy.ts`) en is de balk weg — één codepad. Let op:
+`NEXT_PUBLIC_SANDBOX` moet bij **build-tijd** gezet zijn (Next bakt
+`NEXT_PUBLIC_*` in de client-bundle); zet hem dus als env var op Netlify
+en niet alleen at runtime.
 
 De webhook `orders/create` wijst naar `/api/webhooks/orders/create` en
 wordt geverifieerd met HMAC (`SHOPIFY_WEBHOOK_SECRET`). Testorders nooit
