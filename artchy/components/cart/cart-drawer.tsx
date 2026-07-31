@@ -161,6 +161,18 @@ export function CartDrawer() {
             <p className="mt-1 text-xs text-ash">
               Shipping and taxes calculated at checkout.
             </p>
+            {process.env.NEXT_PUBLIC_SANDBOX === "true" && (
+              <div className="mt-3 border border-gold/50 bg-night p-3 text-xs text-ash">
+                <p className="font-medium text-gold">
+                  Testomgeving — er wordt niets echt afgeschreven.
+                </p>
+                <p className="mt-1">
+                  Betaal in de checkout met kaartnummer{" "}
+                  <code className="text-snow">1</code>, een vervaldatum in de
+                  toekomst en elke CVV (Bogus Gateway).
+                </p>
+              </div>
+            )}
             <a href={cart.checkoutUrl} className="mt-4 block">
               <Button className="w-full" disabled={pending}>
                 Checkout

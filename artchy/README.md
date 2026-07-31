@@ -66,6 +66,34 @@ wordt geverifieerd met HMAC (`SHOPIFY_WEBHOOK_SECRET`). Testorders nooit
 fulfillen: altijd annuleren en archiveren/verwijderen (de reset-knop doet
 dat goed).
 
+## Deploy naar Railway (demo)
+
+Vereist: een `RAILWAY_TOKEN` (railway.com → Account Settings → Tokens).
+
+```bash
+npm install -g @railway/cli
+cd artchy
+export RAILWAY_TOKEN=...           # account-token
+railway init --name artchy-demo    # nieuw project
+railway up                         # bouwt en deployt deze map
+railway variables \
+  --set SHOPIFY_STORE_DOMAIN=jouw-shop.myshopify.com \
+  --set SHOPIFY_STOREFRONT_ACCESS_TOKEN=... \
+  --set SHOPIFY_ADMIN_ACCESS_TOKEN=... \
+  --set SHOPIFY_WEBHOOK_SECRET=... \
+  --set NEXT_PUBLIC_SANDBOX=true
+railway up                         # herdeploy zodat NEXT_PUBLIC_* in de build zit
+railway domain                     # genereert het publieke domein
+```
+
+Zet daarna in Shopify (Settings → Notifications → Webhooks) de
+`orders/create`-webhook op
+`https://<railway-domein>/api/webhooks/orders/create`.
+
+De webhook-log en de voorraad-baseline staan in een lokaal JSON-bestand
+(`.sandbox-store.json`); op Railway overleeft dat een redeploy niet —
+prima voor een demo, niet voor productie.
+
 ### Testmodus uitzetten vóór livegang
 
 1. Shopify admin → **Settings → Payments**.
