@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { Search, User, ShoppingBag } from "lucide-react";
+import { Search, User } from "lucide-react";
+
+import { CartTrigger } from "@/components/cart/cart-trigger";
+import { SandboxBanner } from "@/components/sandbox-banner";
 
 const NAV = [
   { href: "/shop", label: "Shop" },
@@ -17,6 +20,7 @@ const NAV = [
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-coal/95 backdrop-blur-sm">
+      <SandboxBanner />
       <p className="label border-b border-line py-2 text-center text-snow">
         <span className="text-gold">Limited drop</span> now live
         <span className="mx-3 text-ash">•</span>
@@ -55,14 +59,7 @@ export function SiteHeader() {
           >
             <User className="size-5" aria-hidden />
           </button>
-          <button
-            type="button"
-            aria-label="Cart"
-            className="relative text-snow transition-colors hover:text-gold"
-          >
-            <ShoppingBag className="size-5" aria-hidden />
-            <span className="absolute -right-1 -top-1 size-2 rounded-full bg-gold" />
-          </button>
+          <CartTrigger />
         </div>
       </div>
     </header>

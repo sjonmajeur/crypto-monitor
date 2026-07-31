@@ -45,6 +45,39 @@ is, komt de link hier te staan en worden de design-tokens in
 `app/globals.css` vervangen door de exacte Figma-variabelen. Zie
 `DECISIONS.md` voor alle aannames die tot die tijd gelden.
 
+## Sandbox (testmodus)
+
+Zet in `.env.local` (en op Netlify) `NEXT_PUBLIC_SANDBOX=true`. Dan:
+
+- verschijnt een vaste balk "SANDBOX — testmodus, geen echte betalingen";
+- bestaat `/sandbox` met de testkaarten (uitklapbaar, met kopieerknop),
+  de laatste 10 testorders uit de Admin API, de webhook-log, een knop
+  "Vul cart met demo-items" en "Reset sandbox" (annuleert + verwijdert
+  testorders en zet de voorraad terug naar de vastgelegde startwaarden).
+
+Staat de variabele uit, dan bestaat `/sandbox` niet (404) en is de balk
+weg — zelfde build, één codepad.
+
+De webhook `orders/create` wijst naar `/api/webhooks/orders/create` en
+wordt geverifieerd met HMAC (`SHOPIFY_WEBHOOK_SECRET`). Testorders nooit
+fulfillen: altijd annuleren en archiveren/verwijderen (de reset-knop doet
+dat goed).
+
+### Testmodus uitzetten vóór livegang
+
+1. Shopify admin → **Settings → Payments**.
+2. Staat de **Bogus Gateway** (Test payment provider) actief: verwijder
+   die en activeer een echte provider (bijv. Shopify Payments).
+3. Gebruik je Shopify Payments: open **Manage** en zet **Test mode** UIT.
+4. Zet `NEXT_PUBLIC_SANDBOX` uit (of verwijder de env var) en redeploy —
+   daarmee verdwijnen de sandbox-balk en `/sandbox`.
+5. Controleer met een kleine echte betaling dat er géén "test" badge op
+   de order in de admin staat, en refund die daarna.
+
+Let op: een development store kan geen echte betalingen ontvangen totdat
+het plan is omgezet; testmodus aan laten staan op een live store
+blokkeert juist echte orders.
+
 ## Routes
 
 ```
@@ -54,7 +87,15 @@ is, komt de link hier te staan en worden de design-tokens in
 /taji           de wereld van Taji
 /how-it-works   how art becomes fashion
 /about          a new generation of creativity
+/product/[h]    PDP: varianten via optie-knoppen, add to cart
+/order/bedankt  bevestiging na checkout (leest webhook-log)
+/sandbox        testmodus-dashboard (alleen met NEXT_PUBLIC_SANDBOX=true)
 ```
+
+Cart en checkout lopen via de Storefront Cart API (cartCreate,
+cartLinesAdd/Update/Remove); het cart-id staat in een httpOnly-cookie en
+afrekenen is een redirect naar `cart.checkoutUrl` — er is geen eigen
+checkout of betaalflow.
 
 ## Structuur
 
