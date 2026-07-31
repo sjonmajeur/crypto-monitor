@@ -14,6 +14,11 @@ afgesproken.
 | Storefront API-versie | 2025-07 als default, overschrijfbaar via env | Shopify admin → welke API-versie de store-app gebruikt |
 | Copy op de tijdelijke home (stap 1-preview) | Korte NL-tekst, gemarkeerd met `data-placeholder="true"` | Merkverhaal/copy uit Figma of van jou |
 | Prijsnotatie | `Intl.NumberFormat("nl-NL")`, hele bedragen zonder decimalen (€ 24), anders twee decimalen | Bevestig gewenste notatie |
+| Shopify MCP-token verlopen tijdens stap 2 — catalogus (glastypes, inhoud-waarden) kon niet gelezen worden | Filters leiden zichzelf af uit de live data: glastype = `productType`, inhoud = productoptie "Inhoud"/"Volume" (of ml/cl-tags zoals "350ml"), genormaliseerd naar ml | Herautoriseer de Shopify-connector in je claude.ai-instellingen; dan verifieer ik de aannames tegen de echte producten |
+| Bron voor "inhoud in ml" niet gedefinieerd in Figma of brief | Optie-naam matcht op inhoud/volume/capacity, waarde op `<getal> ml\|cl\|l`; tags als fallback | Hoe inhoud in Shopify is vastgelegd (optie, metafield of tag) |
+| Sorteeropties niet gespecificeerd | Nieuwste (default), prijs laag–hoog, prijs hoog–laag | Figma-frame van de PLP-filterbalk |
+| Catalogusgrootte onbekend | PLP haalt max. 100 producten in één call en filtert/sorteert server-side (passend bij ambachtelijk aanbod); URL-searchParams dragen de filterstaat | Werkelijk aantal producten in de store; boven ~100 bouw ik paginering + Storefront-side filtering |
+| Filterbalk-ontwerp ontbreekt (geen Figma) | Sobere balk boven het grid: toggle-knoppen per glastype en inhoud (aria-pressed), select voor sorteren, resultaat-teller met aria-live | Figma-frame van de PLP |
 
 **Nooit verzonnen (bewust):** prijzen, voorraad, varianten en SKU's. Die
 komen uitsluitend uit Shopify; zonder keys faalt de weergave hard met een

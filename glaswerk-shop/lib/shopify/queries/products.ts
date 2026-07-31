@@ -4,6 +4,14 @@ export const PRODUCT_CARD_FRAGMENT = /* GraphQL */ `
     handle
     title
     availableForSale
+    productType
+    tags
+    options {
+      name
+      optionValues {
+        name
+      }
+    }
     featuredImage {
       url
       altText

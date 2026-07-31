@@ -16,11 +16,19 @@ export const imageSchema = z.object({
  * De velden die de product card nodig heeft. PDP-schema's (varianten,
  * beschrijving, maatinfo) komen in stap 3 hier bij.
  */
+export const productOptionSchema = z.object({
+  name: z.string(),
+  optionValues: z.array(z.object({ name: z.string() })),
+});
+
 export const productCardSchema = z.object({
   id: z.string(),
   handle: z.string(),
   title: z.string(),
   availableForSale: z.boolean(),
+  productType: z.string(),
+  tags: z.array(z.string()),
+  options: z.array(productOptionSchema),
   featuredImage: imageSchema.nullable(),
   images: z.object({
     nodes: z.array(imageSchema),
