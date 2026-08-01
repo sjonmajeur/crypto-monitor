@@ -9,6 +9,7 @@ import {
   User,
 } from "lucide-react";
 
+import { ArtistCards } from "@/components/artists/artist-cards";
 import { Countdown } from "@/components/home/countdown";
 import { NewsletterForm } from "@/components/home/newsletter-form";
 import { Reveal } from "@/components/reveal";
@@ -25,9 +26,6 @@ import collectionJoshImg from "@/public/collection-josh.jpg";
 import collectionTajiImg from "@/public/collection-taji.jpg";
 import collectionBrassImg from "@/public/collection-brass.jpg";
 import dropHoodieImg from "@/public/drop-hoodie.jpg";
-import creatorJoshImg from "@/public/creator-josh.jpg";
-import creatorTajiImg from "@/public/creator-taji.jpg";
-import creatorBrassImg from "@/public/creator-brass.jpg";
 import generationImg from "@/public/generation.jpg";
 
 /*
@@ -223,91 +221,8 @@ export default function Home() {
               View all creators <ArrowRight className="size-4" aria-hidden />
             </Link>
           </div>
-          <div className="mt-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_1.2fr_1fr]">
-            {/* Josh */}
-            <Reveal>
-              <article className="border border-line bg-night">
-                <div className="relative aspect-[4/5] w-full overflow-hidden">
-                  <Image
-                    src={creatorJoshImg}
-                    alt="Portret van Josh"
-                    fill
-                    sizes="(min-width: 1024px) 33vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className="text-subheading text-snow">Josh</h3>
-                  <p className="label mt-1 text-gold">The young visionary</p>
-                  <p className="mt-3 text-sm text-ash">
-                    Raw imagination. Limitless creativity.
-                  </p>
-                  <Link
-                    href="/artists"
-                    className="label mt-5 flex items-center gap-2 text-gold hover:text-snow"
-                  >
-                    Learn more <ArrowRight className="size-4" aria-hidden />
-                  </Link>
-                </div>
-              </article>
-            </Reveal>
-
-            {/* Taji — middelste, uitgelicht */}
-            <Reveal delay={60}>
-              <article className="border border-gold/40 bg-night">
-                <div className="relative aspect-[3/4] w-full overflow-hidden">
-                  <Image
-                    src={creatorTajiImg}
-                    alt="TAJI, the emotion creature"
-                    fill
-                    sizes="(min-width: 1024px) 33vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-5 text-center">
-                  <p className="label text-gold">Taji</p>
-                  <h3 className="mt-1 text-subheading text-snow">
-                    The emotion creature
-                  </h3>
-                  <p className="mt-3 text-sm text-ash">
-                    Born from imagination. Powered by emotion.
-                  </p>
-                  <Link href="/taji" className="mt-5 inline-block">
-                    <Button className="gap-2">
-                      Learn more <ArrowRight className="size-4" aria-hidden />
-                    </Button>
-                  </Link>
-                </div>
-              </article>
-            </Reveal>
-
-            {/* Brass */}
-            <Reveal delay={120}>
-              <article className="border border-line bg-night">
-                <div className="relative aspect-[4/5] w-full overflow-hidden">
-                  <Image
-                    src={creatorBrassImg}
-                    alt="Portret van Brass"
-                    fill
-                    sizes="(min-width: 1024px) 33vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className="text-subheading text-snow">Brass</h3>
-                  <p className="label mt-1 text-gold">The luxury artist</p>
-                  <p className="mt-3 text-sm text-ash">
-                    Collaborations with global brands.
-                  </p>
-                  <Link
-                    href="/artists"
-                    className="label mt-5 flex items-center gap-2 text-gold hover:text-snow"
-                  >
-                    Learn more <ArrowRight className="size-4" aria-hidden />
-                  </Link>
-                </div>
-              </article>
-            </Reveal>
+          <div className="mt-8">
+            <ArtistCards variant="home" />
           </div>
         </section>
 

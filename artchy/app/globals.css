@@ -80,3 +80,34 @@ h3 {
   outline: 2px solid var(--gold);
   outline-offset: 2px;
 }
+
+/* Bio-dialog: fade + scale-in (desktop), slide-up bottom-sheet (mobiel) */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes dialog-fade {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes dialog-pop {
+    from {
+      opacity: 0;
+      scale: 0.96;
+    }
+  }
+  @keyframes dialog-slide-up {
+    from {
+      translate: 0 100%;
+    }
+  }
+  .dialog-backdrop {
+    animation: dialog-fade 200ms ease-out;
+  }
+  .dialog-panel {
+    animation: dialog-slide-up 250ms ease-out;
+  }
+  @media (min-width: 640px) {
+    .dialog-panel {
+      animation: dialog-pop 200ms ease-out;
+    }
+  }
+}
