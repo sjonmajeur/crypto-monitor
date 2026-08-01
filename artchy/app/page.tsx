@@ -84,8 +84,9 @@ export default function Home() {
         <CartResetWatcher />
       </Suspense>
       <main className="flex-1">
-        {/* 3. Hero — het beeld ís de hero, geen tekst eroverheen */}
-        <section className="relative min-h-[85svh]">
+        {/* 3. Hero met tekst-overlay: links, verticaal gecentreerd
+            (mobiel: links onderin) */}
+        <section className="relative flex min-h-[85svh] items-end md:items-center">
           {/* Art-direction: hoge crop (man + TAJI-print) op smal, breed beeld op md+ */}
           <Image
             src={heroMobileImg}
@@ -104,10 +105,32 @@ export default function Home() {
             sizes="100vw"
             className="hidden object-cover md:block"
           />
+          {/* Leesbaarheid: donkere gradient van links naar rechts + zachte
+              verloop naar de volgende sectie onderaan */}
           <div
-            className="absolute inset-0 bg-gradient-to-b from-coal/40 via-transparent to-coal"
+            className="absolute inset-0 bg-gradient-to-r from-coal/85 via-coal/35 to-transparent"
             aria-hidden
           />
+          <div
+            className="absolute inset-0 bg-gradient-to-b from-coal/30 via-transparent to-coal"
+            aria-hidden
+          />
+
+          <div className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6 md:pb-0">
+            <p className="label text-gold">Wearable art platform</p>
+            <h1 className="mt-4 font-display text-4xl uppercase leading-[0.95] text-snow sm:text-6xl lg:text-7xl">
+              Where
+              <br />
+              Imagination
+              <br />
+              Becomes identity.
+            </h1>
+            <Link href="/shop" className="mt-8 inline-block">
+              <Button className="gap-2">
+                Shop the drop <ArrowRight className="size-4" aria-hidden />
+              </Button>
+            </Link>
+          </div>
         </section>
 
         {/* 4. Featured collections */}
