@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { ArtistCards } from "@/components/artists/artist-cards";
+import { CartResetWatcher } from "@/components/cart/cart-reset-watcher";
 import { Countdown } from "@/components/home/countdown";
 import { NewsletterForm } from "@/components/home/newsletter-form";
 import { Reveal } from "@/components/reveal";
@@ -78,6 +80,9 @@ export default function Home() {
   return (
     <>
       <SiteHeader />
+      <Suspense fallback={null}>
+        <CartResetWatcher />
+      </Suspense>
       <main className="flex-1">
         {/* 3. Hero — het beeld ís de hero, geen tekst eroverheen */}
         <section className="relative min-h-[85svh]">

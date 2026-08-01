@@ -101,3 +101,13 @@ export async function clearCartCookieAction(): Promise<void> {
   const jar = await cookies();
   jar.delete(CART_COOKIE);
 }
+
+/** Volledige reset: wist demo-cartregels én het cart-id (beide modi). */
+export async function clearCartAction(): Promise<void> {
+  const jar = await cookies();
+  if (!isShopifyConfigured()) {
+    const { demoClearLines } = await import("@/lib/demo/cart");
+    await demoClearLines();
+  }
+  jar.delete(CART_COOKIE);
+}

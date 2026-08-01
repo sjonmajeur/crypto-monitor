@@ -12,6 +12,7 @@ import {
 
 import {
   addToCartAction,
+  clearCartAction,
   getCartAction,
   removeCartLineAction,
   updateCartLineAction,
@@ -27,6 +28,7 @@ type CartContextValue = {
   updateLine: (lineId: string, quantity: number) => void;
   removeLine: (lineId: string) => void;
   refresh: () => void;
+  clearCart: () => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -65,6 +67,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const clearCart = useCallback(() => {
+    startTransition(async () => {
+      await clearCartAction();
+      try {
+        // Demo/reset: ook eventuele client-restanten opruimen.
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch {
+        // Storage kan geblokkeerd zijn (privacy-modus) — geen probleem.
+      }
+      setCart(await getCartAction());
+    });
+  }, []);
+
   return (
     <CartContext.Provider
       value={{
@@ -76,6 +92,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         updateLine,
         removeLine,
         refresh,
+        clearCart,
       }}
     >
       {children}

@@ -15,7 +15,8 @@ import { formatPrice } from "@/lib/format";
  * geen eigen checkout of betaalflow.
  */
 export function CartDrawer() {
-  const { cart, open, pending, setOpen, updateLine, removeLine } = useCart();
+  const { cart, open, pending, setOpen, updateLine, removeLine, clearCart } =
+    useCart();
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -178,6 +179,14 @@ export function CartDrawer() {
                 Checkout
               </Button>
             </a>
+            <button
+              type="button"
+              disabled={pending}
+              onClick={clearCart}
+              className="label mt-3 w-full text-center text-ash transition-colors hover:text-gold disabled:opacity-50"
+            >
+              Leeg winkelwagen
+            </button>
           </div>
         )}
       </div>
