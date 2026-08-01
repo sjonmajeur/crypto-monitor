@@ -15,6 +15,15 @@ import {
 
 export { isShopifyConfigured } from "./client";
 export { ShopifyConfigError, ShopifyApiError } from "./client";
+
+/**
+ * Demo-modus: actief zolang er geen Storefront-token is. De site draait
+ * dan volledig op de lokale demo-catalogus en demo-cart; met echte
+ * env-variabelen schakelt alles vanzelf terug naar Shopify.
+ */
+export function isDemoMode(): boolean {
+  return !isShopifyConfigured();
+}
 export type {
   ProductCardData,
   ProductDetail,
@@ -34,6 +43,10 @@ export async function getProducts({
   sortKey?: "TITLE" | "PRICE" | "CREATED_AT" | "BEST_SELLING";
   reverse?: boolean;
 } = {}): Promise<ProductCardData[]> {
+  if (isDemoMode()) {
+    const { demoProductCards } = await import("@/lib/demo/catalog");
+    return demoProductCards().slice(0, first);
+  }
   const data = await shopifyFetch<unknown>({
     query: GET_PRODUCTS_QUERY,
     variables: { first, sortKey, reverse },
@@ -45,6 +58,10 @@ export async function getProducts({
 export async function getProductByHandle(
   handle: string,
 ): Promise<ProductDetail | null> {
+  if (isDemoMode()) {
+    const { demoProductByHandle } = await import("@/lib/demo/catalog");
+    return demoProductByHandle(handle);
+  }
   const data = await shopifyFetch<unknown>({
     query: GET_PRODUCT_BY_HANDLE_QUERY,
     variables: { handle },
@@ -56,6 +73,12 @@ export async function getRelatedProducts(
   product: ProductDetail,
   first = 3,
 ): Promise<ProductCardData[]> {
+  if (isDemoMode()) {
+    const { demoProductCards } = await import("@/lib/demo/catalog");
+    return demoProductCards()
+      .filter((p) => p.id !== product.id)
+      .slice(0, first);
+  }
   const query = product.productType
     ? `product_type:'${product.productType.replaceAll("'", "")}'`
     : undefined;
@@ -71,6 +94,10 @@ export async function getRelatedProducts(
 
 /** Eerste beschikbare variant van maximaal drie producten, voor demo-items. */
 export async function getDemoVariantIds(max = 3): Promise<string[]> {
+  if (isDemoMode()) {
+    const { DEMO_PRODUCTS } = await import("@/lib/demo/catalog");
+    return DEMO_PRODUCTS.slice(0, max).map((p) => p.variants.nodes[0].id);
+  }
   const data = await shopifyFetch<unknown>({
     query: /* GraphQL */ `
       query DemoVariants {

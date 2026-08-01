@@ -26,6 +26,7 @@ type CartContextValue = {
   addItem: (merchandiseId: string, quantity?: number) => void;
   updateLine: (lineId: string, quantity: number) => void;
   removeLine: (lineId: string) => void;
+  refresh: () => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -35,11 +36,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
 
-  useEffect(() => {
+  const refresh = useCallback(() => {
     startTransition(async () => {
       setCart(await getCartAction());
     });
   }, []);
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
 
   const addItem = useCallback((merchandiseId: string, quantity = 1) => {
     startTransition(async () => {
@@ -62,7 +67,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ cart, open, pending, setOpen, addItem, updateLine, removeLine }}
+      value={{
+        cart,
+        open,
+        pending,
+        setOpen,
+        addItem,
+        updateLine,
+        removeLine,
+        refresh,
+      }}
     >
       {children}
     </CartContext.Provider>

@@ -9,7 +9,7 @@ import {
   deriveFilterOptions,
   parseSort,
 } from "@/lib/collection";
-import { getProducts, shopifyStatus } from "@/lib/shopify";
+import { getProducts } from "@/lib/shopify";
 
 export const metadata: Metadata = {
   title: "Shop",
@@ -27,25 +27,8 @@ export default async function ShopPage({
 }: {
   searchParams: SearchParams;
 }) {
-  const status = shopifyStatus();
-
-  if (!status.configured) {
-    return (
-      <>
-        <SiteHeader />
-        <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center gap-4 px-6 py-24">
-          <h1 className="text-heading">Shop</h1>
-          <p data-placeholder="true" className="text-ash">
-            Shopify is nog niet gekoppeld: {status.reason}. Vul de
-            Storefront-keys in <code>.env.local</code> in om producten te
-            tonen. Er wordt bewust geen mock-data getoond.
-          </p>
-        </main>
-        <SiteFooter />
-      </>
-    );
-  }
-
+  // Zonder Storefront-token levert getProducts de demo-catalogus;
+  // met token echte Shopify-data. Geen aparte UI nodig.
   const params = await searchParams;
   const filters = {
     type: params.type,

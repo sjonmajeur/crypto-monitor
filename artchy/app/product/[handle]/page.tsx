@@ -9,7 +9,6 @@ import { SiteHeader } from "@/components/site-header";
 import {
   getProductByHandle,
   getRelatedProducts,
-  isShopifyConfigured,
 } from "@/lib/shopify";
 
 type Params = Promise<{ handle: string }>;
@@ -19,7 +18,6 @@ export async function generateMetadata({
 }: {
   params: Params;
 }): Promise<Metadata> {
-  if (!isShopifyConfigured()) return { title: "Product" };
   const { handle } = await params;
   const product = await getProductByHandle(handle);
   if (!product) return { title: "Product not found" };
@@ -50,8 +48,6 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage({ params }: { params: Params }) {
-  if (!isShopifyConfigured()) notFound();
-
   const { handle } = await params;
   const product = await getProductByHandle(handle);
   if (!product) notFound();

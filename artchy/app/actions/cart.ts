@@ -3,6 +3,12 @@
 import { cookies } from "next/headers";
 
 import {
+  demoAddLine,
+  demoGetCart,
+  demoUpdateLine,
+} from "@/lib/demo/cart";
+import { isShopifyConfigured } from "@/lib/shopify/client";
+import {
   cartCreate,
   cartGet,
   cartLinesAdd,
@@ -12,6 +18,12 @@ import {
 import type { Cart } from "@/lib/shopify/schemas";
 
 const CART_COOKIE = "cartId";
+
+/**
+ * Zonder Storefront-token draait de cart volledig lokaal (demo-modus);
+ * met token loopt alles via de echte Storefront Cart API. In demo is
+ * het line-id gelijk aan het variant-id.
+ */
 
 async function readCartId(): Promise<string | null> {
   const jar = await cookies();
@@ -30,6 +42,8 @@ async function persistCartId(cartId: string): Promise<void> {
 }
 
 export async function getCartAction(): Promise<Cart | null> {
+  if (!isShopifyConfigured()) return demoGetCart();
+
   const cartId = await readCartId();
   if (!cartId) return null;
   try {
@@ -43,8 +57,9 @@ export async function addToCartAction(
   merchandiseId: string,
   quantity = 1,
 ): Promise<Cart> {
-  const cartId = await readCartId();
+  if (!isShopifyConfigured()) return demoAddLine(merchandiseId, quantity);
 
+  const cartId = await readCartId();
   if (cartId) {
     try {
       return await cartLinesAdd(cartId, [{ merchandiseId, quantity }]);
@@ -62,6 +77,8 @@ export async function updateCartLineAction(
   lineId: string,
   quantity: number,
 ): Promise<Cart | null> {
+  if (!isShopifyConfigured()) return demoUpdateLine(lineId, quantity);
+
   const cartId = await readCartId();
   if (!cartId) return null;
   if (quantity <= 0) {
@@ -73,6 +90,8 @@ export async function updateCartLineAction(
 export async function removeCartLineAction(
   lineId: string,
 ): Promise<Cart | null> {
+  if (!isShopifyConfigured()) return demoUpdateLine(lineId, 0);
+
   const cartId = await readCartId();
   if (!cartId) return null;
   return cartLinesRemove(cartId, [lineId]);

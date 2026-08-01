@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
 
+import { CartRefresher } from "@/components/cart/cart-refresher";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { formatPrice } from "@/lib/format";
@@ -47,6 +48,7 @@ export default async function ThankYouPage() {
   return (
     <>
       <SiteHeader />
+      <CartRefresher />
       <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center px-6 py-24">
         {order ? (
           <>
