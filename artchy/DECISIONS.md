@@ -20,6 +20,9 @@ geen mock-data, DECISIONS-logging) blijven gelden.
 | Brand-iconen (Instagram/TikTok/YouTube) — lucide levert geen brand-iconen meer | Inline SVG's voor Instagram/YouTube, muzieknoot voor TikTok; sociale URL's zijn nog `#` | Echte social-URL's van de opdrachtgever |
 | Taal van de UI | Engels, conform het model (config-meldingen voor de developer nog NL) | Bevestig of alles EN moet zijn |
 | Routes | Nav uit het model: /shop (PLP), /artists, /taji, /how-it-works, /about; /collectie en /over zijn hernoemd | Figma-file / sitemap van de opdrachtgever |
+| Echte fotografie voor de homepage | Zelf gegenereerde donkere placeholder-JPG's in public/ (hero, collection-*, creator-*, drop-hoodie, generation) met TAJI-kleuraccenten en een "vervang mij"-label in beeld; bestandsnamen liggen vast zodat echte beelden 1-op-1 vervangen zonder codewijziging | Echte fotografie/renders van de opdrachtgever, zelfde bestandsnamen |
+| Drop-einddatum countdown | 2026-08-15 22:00 CEST (~2 weken na oplevering), constante DROP_ENDS_AT in app/page.tsx | Echte drop-planning |
+| Newsletter-submit | Alleen een success-melding client-side, geen mailinglijst-koppeling | Keuze mailingprovider (Shopify Email, Klaviyo, …) |
 
 ## Oorspronkelijke log (glaswerk-fase)
 

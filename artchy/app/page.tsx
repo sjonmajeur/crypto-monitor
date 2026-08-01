@@ -1,51 +1,47 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Pencil, Lock, Shirt, User } from "lucide-react";
 
 import { Countdown } from "@/components/home/countdown";
+import { NewsletterForm } from "@/components/home/newsletter-form";
 import { Reveal } from "@/components/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 
 /*
- * Home naar het ARTCHY-model (screenshot). Beeldmateriaal (hero,
- * creator-foto's, drop-shot) ontbreekt nog als los asset — die vlakken
- * staan er als gemarkeerde placeholders tot de echte beelden er zijn.
- * Zie DECISIONS.md.
+ * Home naar het ARTCHY-model. Beelden zijn lokale placeholders in
+ * public/ met vaste bestandsnamen — echte beelden zijn 1-op-1 te
+ * vervangen zonder codewijziging. Zie DECISIONS.md.
  */
 
-// Placeholder tot de echte drop-einddatum uit Shopify/planning komt.
-const DROP_ENDS_AT = "2026-08-31T22:00:00+02:00";
+// Placeholder: drop sluit ~2 weken na oplevering (2026-08-01).
+const DROP_ENDS_AT = "2026-08-15T22:00:00+02:00";
 
 const COLLECTIONS = [
   {
     handle: "josh",
     name: "Josh",
-    tagline: "Fearless creativity born from mangas, heroes and imagination.",
+    image: "/collection-josh.jpg",
+    tagline: "Fearless creativity born from manga, heroes and imagination.",
   },
   {
     handle: "taji",
     name: "Taji",
+    image: "/collection-taji.jpg",
     tagline: "The emotion creature. Wear your feelings. That's TAJI.",
   },
   {
     handle: "brass",
     name: "Brass",
+    image: "/collection-brass.jpg",
     tagline: "Luxury meets identity. Timeless art, crafted to last.",
   },
 ];
 
 const STEPS = [
-  {
-    icon: Pencil,
-    title: "Choose",
-    text: "Discover art from our creators.",
-  },
-  {
-    icon: Lock,
-    title: "Unlock",
-    text: "The community unlocks the design.",
-  },
+  { icon: Pencil, title: "Choose", text: "Discover art from our creators." },
+  { icon: Lock, title: "Unlock", text: "The community unlocks the design." },
   {
     icon: Shirt,
     title: "Produce",
@@ -58,84 +54,62 @@ const STEPS = [
   },
 ];
 
-const CREATORS = [
-  {
-    name: "Josh",
-    role: "The young visionary",
-    text: "Raw imagination. Limitless creativity.",
-  },
-  {
-    name: "Taji",
-    role: "The emotion creature",
-    text: "Born from imagination. Powered by emotion.",
-  },
-  {
-    name: "Brass",
-    role: "The luxury artist",
-    text: "Collaborations with global brands.",
-  },
-];
-
-function ImagePlaceholder({
-  label,
-  className,
-}: {
-  label: string;
-  className?: string;
-}) {
-  return (
-    <div
-      data-placeholder="true"
-      role="img"
-      aria-label={`${label} — beeld volgt`}
-      className={`flex items-center justify-center bg-night text-ash ${className ?? ""}`}
-    >
-      <span className="label">{label}</span>
-    </div>
-  );
-}
-
 export default function Home() {
   return (
     <>
       <SiteHeader />
       <main className="flex-1">
-        {/* Hero */}
-        <section className="relative">
-          <ImagePlaceholder
-            label="Hero — hoodie tegen skyline"
-            className="min-h-[60vh] w-full"
+        {/* 3. Fullscreen hero */}
+        <section className="relative min-h-[100svh]">
+          <Image
+            src="/hero.jpg"
+            alt="Man met TAJI-hoodie voor de skyline bij avondlicht"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div
+            className="absolute inset-0 bg-gradient-to-b from-coal/40 via-transparent to-coal"
+            aria-hidden
           />
         </section>
 
-        {/* Featured collections */}
-        <section className="mx-auto w-full max-w-6xl px-6 py-16">
-          <div className="flex items-baseline justify-between gap-6">
+        {/* 4. Featured collections */}
+        <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
             <h2 className="text-heading text-snow">Featured collections</h2>
             <Link
               href="/shop"
               className="label flex items-center gap-2 text-gold hover:text-snow"
             >
-              Explore all collections <ArrowRight className="size-4" aria-hidden />
+              Explore all collections{" "}
+              <ArrowRight className="size-4" aria-hidden />
             </Link>
           </div>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {COLLECTIONS.map((collection, i) => (
               <Reveal key={collection.handle} delay={i * 60}>
                 <Link
                   href={`/shop?type=${collection.handle}`}
-                  className="group block border border-line bg-night p-4"
+                  className="group block h-full border border-line bg-night p-4"
                 >
-                  <ImagePlaceholder
-                    label={`Collectiebeeld ${collection.name}`}
-                    className="aspect-square w-full"
-                  />
+                  <div className="relative aspect-square w-full overflow-hidden">
+                    <Image
+                      src={collection.image}
+                      alt={`${collection.name} collectie`}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover transition-opacity duration-500 group-hover:opacity-80"
+                    />
+                  </div>
                   <h3 className="mt-4 text-subheading text-snow">
                     {collection.name}
                   </h3>
                   <p className="mt-1 text-sm text-ash">{collection.tagline}</p>
                   <p className="label mt-4 flex items-center gap-2 text-gold group-hover:text-snow">
-                    Explore collection <ArrowRight className="size-4" aria-hidden />
+                    Explore collection{" "}
+                    <ArrowRight className="size-4" aria-hidden />
                   </p>
                 </Link>
               </Reveal>
@@ -143,21 +117,23 @@ export default function Home() {
           </div>
         </section>
 
-        {/* How art becomes fashion */}
+        {/* 5. How art becomes fashion */}
         <section className="bg-bone text-coal">
-          <div className="mx-auto w-full max-w-6xl px-6 py-16 text-center">
+          <div className="mx-auto w-full max-w-6xl px-4 py-16 text-center sm:px-6">
             <h2 className="text-heading">How art becomes fashion</h2>
             <p className="mt-2 text-sm text-coal/70">
               This is how we turn art into limited wearable pieces.
             </p>
-            <ol className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+            <ol className="mt-10 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
               {STEPS.map((step, i) => (
                 <li key={step.title} className="flex flex-col items-center">
                   <span className="flex size-8 items-center justify-center rounded-full bg-coal font-display text-sm text-snow">
                     {i + 1}
                   </span>
                   <step.icon className="mt-4 size-6" aria-hidden />
-                  <h3 className="mt-3 text-base">{step.title}</h3>
+                  <h3 className="mt-3 font-display text-base uppercase">
+                    {step.title}
+                  </h3>
                   <p className="mt-1 text-sm text-coal/70">{step.text}</p>
                 </li>
               ))}
@@ -165,9 +141,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Limited drop + countdown */}
-        <section className="mx-auto grid w-full max-w-6xl items-center gap-10 px-6 py-20 lg:grid-cols-2">
-          <div>
+        {/* 6. Limited drop + countdown */}
+        <section className="mx-auto grid w-full max-w-6xl items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2">
+          <div className="min-w-0">
             <p className="label text-gold">Limited release</p>
             <h2 className="mt-3 text-heading text-snow">
               This drop is produced only for the community.
@@ -184,16 +160,21 @@ export default function Home() {
               </Button>
             </Link>
           </div>
-          <ImagePlaceholder
-            label="Drop-shot — hoodie"
-            className="aspect-square w-full"
-          />
+          <div className="relative aspect-square w-full overflow-hidden border border-line bg-night">
+            <Image
+              src="/drop-hoodie.jpg"
+              alt="De limited drop hoodie met TAJI-artwork"
+              fill
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </div>
         </section>
 
-        {/* Meet the creators */}
-        <section className="mx-auto w-full max-w-6xl px-6 py-16">
+        {/* 7. Meet the creators */}
+        <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <p className="label text-gold">The world of Artchy</p>
-          <div className="mt-2 flex items-baseline justify-between gap-6">
+          <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
             <h2 className="text-heading text-snow">Meet the creators.</h2>
             <Link
               href="/artists"
@@ -202,35 +183,98 @@ export default function Home() {
               View all creators <ArrowRight className="size-4" aria-hidden />
             </Link>
           </div>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {CREATORS.map((creator, i) => (
-              <Reveal key={creator.name} delay={i * 60}>
-                <article className="border border-line bg-night">
-                  <ImagePlaceholder
-                    label={`Portret ${creator.name}`}
-                    className="aspect-[4/5] w-full"
+          <div className="mt-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
+            {/* Josh */}
+            <Reveal>
+              <article className="border border-line bg-night">
+                <div className="relative aspect-[4/5] w-full overflow-hidden">
+                  <Image
+                    src="/creator-josh.jpg"
+                    alt="Portret van Josh"
+                    fill
+                    sizes="(min-width: 1024px) 33vw, 100vw"
+                    className="object-cover"
                   />
-                  <div className="p-5">
-                    <h3 className="text-subheading text-snow">{creator.name}</h3>
-                    <p className="label mt-1 text-gold">{creator.role}</p>
-                    <p className="mt-3 text-sm text-ash">{creator.text}</p>
-                    <Link
-                      href="/artists"
-                      className="label mt-5 flex items-center gap-2 text-gold hover:text-snow"
-                    >
+                </div>
+                <div className="p-5">
+                  <h3 className="text-subheading text-snow">Josh</h3>
+                  <p className="label mt-1 text-gold">The young visionary</p>
+                  <p className="mt-3 text-sm text-ash">
+                    Raw imagination. Limitless creativity.
+                  </p>
+                  <Link
+                    href="/artists"
+                    className="label mt-5 flex items-center gap-2 text-gold hover:text-snow"
+                  >
+                    Learn more <ArrowRight className="size-4" aria-hidden />
+                  </Link>
+                </div>
+              </article>
+            </Reveal>
+
+            {/* Taji — middelste, uitgelicht */}
+            <Reveal delay={60}>
+              <article className="border border-gold/40 bg-night">
+                <div className="relative aspect-[3/4] w-full overflow-hidden">
+                  <Image
+                    src="/creator-taji.jpg"
+                    alt="TAJI, the emotion creature"
+                    fill
+                    sizes="(min-width: 1024px) 33vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-5 text-center">
+                  <p className="label text-gold">Taji</p>
+                  <h3 className="mt-1 text-subheading text-snow">
+                    The emotion creature
+                  </h3>
+                  <p className="mt-3 text-sm text-ash">
+                    Born from imagination. Powered by emotion.
+                  </p>
+                  <Link href="/taji" className="mt-5 inline-block">
+                    <Button className="gap-2">
                       Learn more <ArrowRight className="size-4" aria-hidden />
-                    </Link>
-                  </div>
-                </article>
-              </Reveal>
-            ))}
+                    </Button>
+                  </Link>
+                </div>
+              </article>
+            </Reveal>
+
+            {/* Brass */}
+            <Reveal delay={120}>
+              <article className="border border-line bg-night">
+                <div className="relative aspect-[4/5] w-full overflow-hidden">
+                  <Image
+                    src="/creator-brass.jpg"
+                    alt="Portret van Brass"
+                    fill
+                    sizes="(min-width: 1024px) 33vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-5">
+                  <h3 className="text-subheading text-snow">Brass</h3>
+                  <p className="label mt-1 text-gold">The luxury artist</p>
+                  <p className="mt-3 text-sm text-ash">
+                    Collaborations with global brands.
+                  </p>
+                  <Link
+                    href="/artists"
+                    className="label mt-5 flex items-center gap-2 text-gold hover:text-snow"
+                  >
+                    Learn more <ArrowRight className="size-4" aria-hidden />
+                  </Link>
+                </div>
+              </article>
+            </Reveal>
           </div>
         </section>
 
-        {/* A new generation of creativity */}
+        {/* 8. A new generation of creativity */}
         <section className="border-t border-line">
-          <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-6 py-20 lg:grid-cols-2">
-            <div>
+          <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2">
+            <div className="min-w-0">
               <h2 className="text-heading text-snow">
                 A new generation of creativity
               </h2>
@@ -242,17 +286,22 @@ export default function Home() {
                 clothing. This is wearable art.
               </p>
             </div>
-            <ImagePlaceholder
-              label="Storybeeld — twee generaties"
-              className="aspect-video w-full"
-            />
+            <div className="relative aspect-video w-full overflow-hidden border border-line bg-night">
+              <Image
+                src="/generation.jpg"
+                alt="Twee generaties voor de skyline, met gouden kroon en ARTCHY-signatuur"
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
+              />
+            </div>
           </div>
         </section>
 
-        {/* Join the community */}
+        {/* 9. Join the community */}
         <section className="border-t border-line">
-          <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-6 px-6 py-12">
-            <div>
+          <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-6 px-4 py-12 sm:px-6">
+            <div className="min-w-0">
               <h2 className="text-subheading text-snow">
                 Join the Artchy community
               </h2>
@@ -261,25 +310,7 @@ export default function Home() {
                 stories.
               </p>
             </div>
-            {/* Nog niet gekoppeld aan een mailinglijst — zie DECISIONS.md */}
-            <form
-              data-placeholder="true"
-              className="flex w-full max-w-md gap-2"
-              aria-label="Newsletter signup"
-            >
-              <label htmlFor="newsletter-email" className="sr-only">
-                Enter your email
-              </label>
-              <input
-                id="newsletter-email"
-                type="email"
-                placeholder="Enter your email"
-                className="h-11 flex-1 border border-line bg-night px-4 text-sm text-snow placeholder:text-ash"
-              />
-              <Button type="submit" variant="outline" className="gap-2">
-                Join the community <ArrowRight className="size-4" aria-hidden />
-              </Button>
-            </form>
+            <NewsletterForm />
           </div>
         </section>
       </main>
