@@ -17,6 +17,20 @@ import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 
 /*
+ * Statische imports: Next hasht de bestandsnamen (/_next/static/media/…),
+ * zodat browsers na elke beeldwijziging automatisch de nieuwe versie laden.
+ */
+import heroImg from "@/public/hero.jpg";
+import collectionJoshImg from "@/public/collection-josh.jpg";
+import collectionTajiImg from "@/public/collection-taji.jpg";
+import collectionBrassImg from "@/public/collection-brass.jpg";
+import dropHoodieImg from "@/public/drop-hoodie.jpg";
+import creatorJoshImg from "@/public/creator-josh.jpg";
+import creatorTajiImg from "@/public/creator-taji.jpg";
+import creatorBrassImg from "@/public/creator-brass.jpg";
+import generationImg from "@/public/generation.jpg";
+
+/*
  * Home naar het ARTCHY-model. Beelden zijn lokale placeholders in
  * public/ met vaste bestandsnamen — echte beelden zijn 1-op-1 te
  * vervangen zonder codewijziging. Zie DECISIONS.md.
@@ -29,19 +43,19 @@ const COLLECTIONS = [
   {
     handle: "josh",
     name: "Josh",
-    image: "/collection-josh.jpg",
+    image: collectionJoshImg,
     tagline: "Fearless creativity born from manga, heroes and imagination.",
   },
   {
     handle: "taji",
     name: "Taji",
-    image: "/collection-taji.jpg",
+    image: collectionTajiImg,
     tagline: "The emotion creature. Wear your feelings. That's TAJI.",
   },
   {
     handle: "brass",
     name: "Brass",
-    image: "/collection-brass.jpg",
+    image: collectionBrassImg,
     tagline: "Luxury meets identity. Timeless art, crafted to last.",
   },
 ];
@@ -69,7 +83,7 @@ export default function Home() {
         {/* 3. Hero — het beeld ís de hero, geen tekst eroverheen */}
         <section className="relative min-h-[85svh]">
           <Image
-            src="/hero.jpg"
+            src={heroImg}
             alt="Man met TAJI-hoodie voor de skyline bij avondlicht"
             fill
             priority
@@ -187,7 +201,7 @@ export default function Home() {
             />
             <div className="relative h-full w-full overflow-hidden border border-snow/10 bg-night">
               <Image
-                src="/drop-hoodie.jpg"
+                src={dropHoodieImg}
                 alt="De limited drop hoodie met TAJI-artwork"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
@@ -215,7 +229,7 @@ export default function Home() {
               <article className="border border-line bg-night">
                 <div className="relative aspect-[4/5] w-full overflow-hidden">
                   <Image
-                    src="/creator-josh.jpg"
+                    src={creatorJoshImg}
                     alt="Portret van Josh"
                     fill
                     sizes="(min-width: 1024px) 33vw, 100vw"
@@ -243,7 +257,7 @@ export default function Home() {
               <article className="border border-gold/40 bg-night">
                 <div className="relative aspect-[3/4] w-full overflow-hidden">
                   <Image
-                    src="/creator-taji.jpg"
+                    src={creatorTajiImg}
                     alt="TAJI, the emotion creature"
                     fill
                     sizes="(min-width: 1024px) 33vw, 100vw"
@@ -272,7 +286,7 @@ export default function Home() {
               <article className="border border-line bg-night">
                 <div className="relative aspect-[4/5] w-full overflow-hidden">
                   <Image
-                    src="/creator-brass.jpg"
+                    src={creatorBrassImg}
                     alt="Portret van Brass"
                     fill
                     sizes="(min-width: 1024px) 33vw, 100vw"
@@ -314,7 +328,7 @@ export default function Home() {
             </div>
             <div className="relative aspect-video w-full overflow-hidden border border-line bg-night">
               <Image
-                src="/generation.jpg"
+                src={generationImg}
                 alt="Twee generaties voor de skyline"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
