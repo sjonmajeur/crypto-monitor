@@ -3,42 +3,66 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Menu, Search, User, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown, Menu, Search, User, X } from "lucide-react";
 
 import { CartTrigger } from "@/components/cart/cart-trigger";
 import { SandboxBanner } from "@/components/sandbox-banner";
+import { ARTISTS } from "@/lib/artists";
 import { cn } from "@/lib/utils";
 import logoTaji from "@/public/logo-taji.png";
 
-const NAV = [
-  { href: "/shop", label: "Shop" },
-  { href: "/artists", label: "Artists" },
-  { href: "/taji", label: "Taji" },
+const NAV_BEFORE = [{ href: "/shop", label: "Shop" }];
+const NAV_AFTER = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/about", label: "About" },
 ];
 
 /**
- * Header naar het ARTCHY-model: sandbox-balk bovenaan, dan de gouden
- * announcement bar, dan de nav met links (desktop) of hamburger
- * (mobiel), logo gecentreerd, iconen rechts.
+ * Header naar het ARTCHY-model. "Artists" is een dropdown (desktop) of
+ * groep met sub-items (mobiel) met de drie artiesten; elk item opent de
+ * bio-popup via /artists?artist=<slug>.
  */
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [artistsOpen, setArtistsOpen] = useState(false);
+  const artistsRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
 
-  // Sluiten op Escape; links sluiten het menu zelf via onClick.
+  // Sluiten op Escape; dropdown ook bij klik buiten het menu.
   useEffect(() => {
-    if (!menuOpen) return;
+    if (!menuOpen && !artistsOpen) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMenuOpen(false);
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+        setArtistsOpen(false);
+      }
+    };
+    const onClick = (e: MouseEvent) => {
+      if (artistsOpen && !artistsRef.current?.contains(e.target as Node)) {
+        setArtistsOpen(false);
+      }
     };
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [menuOpen]);
+    document.addEventListener("mousedown", onClick);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onClick);
+    };
+  }, [menuOpen, artistsOpen]);
+
+  const navLinkClass = (active: boolean) =>
+    cn(
+      "label transition-colors hover:text-gold",
+      active ? "text-gold" : "text-snow",
+    );
+
+  const closeAll = () => {
+    setMenuOpen(false);
+    setArtistsOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-coal/95 backdrop-blur-sm">
@@ -48,18 +72,73 @@ export function SiteHeader() {
         <span className="mx-3 text-ash">•</span>
         Free shipping above €100
       </p>
-      <div className="mx-auto grid w-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 py-4 sm:px-6">
+      <div className="mx-auto grid w-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 py-3 sm:px-6">
         <div className="flex justify-start">
-          <nav aria-label="Main navigation" className="hidden gap-6 lg:flex">
-            {NAV.map((item) => (
+          <nav aria-label="Main navigation" className="hidden items-center gap-6 lg:flex">
+            {NAV_BEFORE.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 aria-current={isActive(item.href) ? "page" : undefined}
+                className={navLinkClass(isActive(item.href))}
+              >
+                {item.label}
+              </Link>
+            ))}
+
+            <div ref={artistsRef} className="relative">
+              <button
+                type="button"
+                aria-expanded={artistsOpen}
+                aria-controls="artists-dropdown"
                 className={cn(
-                  "label transition-colors hover:text-gold",
-                  isActive(item.href) ? "text-gold" : "text-snow",
+                  navLinkClass(isActive("/artists")),
+                  "flex items-center gap-1",
                 )}
+                onClick={() => setArtistsOpen((v) => !v)}
+              >
+                Artists
+                <ChevronDown
+                  className={cn(
+                    "size-3.5 transition-transform",
+                    artistsOpen && "rotate-180",
+                  )}
+                  aria-hidden
+                />
+              </button>
+              {artistsOpen && (
+                <div
+                  id="artists-dropdown"
+                  className="absolute left-0 top-full mt-3 w-48 border border-line bg-coal py-2"
+                >
+                  <Link
+                    href="/artists"
+                    className="label block px-4 py-2.5 text-snow hover:text-gold"
+                    onClick={closeAll}
+                  >
+                    All artists
+                  </Link>
+                  <div className="mx-4 my-1 border-t border-line" aria-hidden />
+                  {ARTISTS.map((artist) => (
+                    <Link
+                      key={artist.slug}
+                      href={`/artists?artist=${artist.slug}`}
+                      className="label block px-4 py-2.5 text-snow hover:text-gold"
+                      onClick={closeAll}
+                    >
+                      {artist.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {NAV_AFTER.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={isActive(item.href) ? "page" : undefined}
+                className={navLinkClass(isActive(item.href))}
               >
                 {item.label}
               </Link>
@@ -122,16 +201,45 @@ export function SiteHeader() {
           className="border-t border-line lg:hidden"
         >
           <ul className="mx-auto w-full max-w-6xl px-4 py-2 sm:px-6">
-            {NAV.map((item) => (
+            {NAV_BEFORE.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  aria-current={isActive(item.href) ? "page" : undefined}
-                  className={cn(
-                    "label block py-3 transition-colors hover:text-gold",
-                    isActive(item.href) ? "text-gold" : "text-snow",
-                  )}
-                  onClick={() => setMenuOpen(false)}
+                  className={cn(navLinkClass(isActive(item.href)), "block py-3")}
+                  onClick={closeAll}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+            <li>
+              <Link
+                href="/artists"
+                className={cn(navLinkClass(isActive("/artists")), "block py-3")}
+                onClick={closeAll}
+              >
+                Artists
+              </Link>
+              <ul className="border-l border-line pl-4">
+                {ARTISTS.map((artist) => (
+                  <li key={artist.slug}>
+                    <Link
+                      href={`/artists?artist=${artist.slug}`}
+                      className="label block py-2.5 text-ash transition-colors hover:text-gold"
+                      onClick={closeAll}
+                    >
+                      {artist.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            {NAV_AFTER.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={cn(navLinkClass(isActive(item.href)), "block py-3")}
+                  onClick={closeAll}
                 >
                   {item.label}
                 </Link>

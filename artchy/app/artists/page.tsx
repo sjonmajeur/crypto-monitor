@@ -9,7 +9,13 @@ export const metadata: Metadata = {
   description: "The creators behind Artchy: Josh, Taji and Brass.",
 };
 
-export default function ArtistsPage() {
+export default async function ArtistsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ artist?: string }>;
+}) {
+  const { artist } = await searchParams;
+
   return (
     <>
       <SiteHeader />
@@ -20,7 +26,13 @@ export default function ArtistsPage() {
           Tap a creator to read their story.
         </p>
         <div className="mt-10">
-          <ArtistCards variant="page" />
+          {/* key zorgt dat een menu-klik naar een andere artiest de
+              bijbehorende bio opent, ook als je al op /artists staat */}
+          <ArtistCards
+            key={artist ?? "none"}
+            variant="page"
+            initialOpenSlug={artist}
+          />
         </div>
       </main>
       <SiteFooter />

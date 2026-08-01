@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { ArtistBioDialog } from "./artist-bio-dialog";
 import { Reveal } from "@/components/reveal";
 import { Button } from "@/components/ui/button";
-import { ARTISTS, type Artist } from "@/lib/artists";
+import { ARTISTS, findArtist, type Artist } from "@/lib/artists";
 import { cn } from "@/lib/utils";
 
 /**
@@ -15,8 +15,17 @@ import { cn } from "@/lib/utils";
  * homepage-layout (uitgelichte TAJI-middenkolom); `variant="page"` is
  * het grid op /artists. Hele kaart klikbaar, opent de dialog.
  */
-export function ArtistCards({ variant }: { variant: "home" | "page" }) {
-  const [openArtist, setOpenArtist] = useState<Artist | null>(null);
+export function ArtistCards({
+  variant,
+  initialOpenSlug,
+}: {
+  variant: "home" | "page";
+  /** Opent direct de bio van deze artiest (bijv. vanuit het menu). */
+  initialOpenSlug?: string;
+}) {
+  const [openArtist, setOpenArtist] = useState<Artist | null>(() =>
+    findArtist(initialOpenSlug),
+  );
 
   return (
     <>

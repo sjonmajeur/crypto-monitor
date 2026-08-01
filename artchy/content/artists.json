@@ -1,0 +1,38 @@
+{
+  "_uitleg": "Dit bestand bepaalt alle artiest-teksten op de site. Zie HANDLEIDING-CONTENT.md in de hoofdmap voor hoe je dit veilig aanpast. Elke alinea van de bio staat tussen aanhalingstekens; laat de komma's en haakjes staan.",
+  "artists": [
+    {
+      "naam": "Josh",
+      "subtitel": "The young visionary",
+      "tagline": "Raw imagination. Limitless creativity.",
+      "bio": [
+        "Josh is fourteen, and his sketchbooks don't close. Raised on manga panels, superhero arcs and late-night drawing sessions, he fills page after page with characters that refuse to sit still — heroes, monsters, and everything in between.",
+        "His work is raw on purpose. No polish, no filter — just the direct line from imagination to ink. The rough edges most brands would sand away are exactly what Artchy prints.",
+        "Every Josh drop starts as a drawing that made him grin. If the community unlocks it, it becomes a limited piece you can wear — and then it's gone."
+      ],
+      "foto": "creator-josh.jpg"
+    },
+    {
+      "naam": "Taji",
+      "subtitel": "The emotion creature",
+      "tagline": "Born from imagination. Powered by emotion.",
+      "bio": [
+        "Taji was born in the margins of Josh's sketchbook — the emotion creature. Part fox, part storm of paint, it escaped the page before the ink was dry.",
+        "Taji doesn't do words. It wears feelings as colors: joy splashes yellow, courage burns red, calm settles into teal. Every piece in the Taji collection captures a single mood, caught mid-burst.",
+        "Wear your feelings. That's TAJI."
+      ],
+      "foto": "creator-taji.jpg"
+    },
+    {
+      "naam": "Brass",
+      "subtitel": "The luxury artist",
+      "tagline": "Collaborations with global brands.",
+      "bio": [
+        "Brass spent a decade designing for global houses — the kind of studios where a millimeter is a debate. He brought that discipline to Artchy, and kept the soul.",
+        "His pieces are quiet luxury with a signature: refined cuts, heavyweight fabrics, details you notice the second time. Timeless art, crafted to last.",
+        "For every drop, Brass takes Josh's raw energy and gives it an edge you can wear anywhere — from the block to the gallery."
+      ],
+      "foto": "creator-brass.jpg"
+    }
+  ]
+}
