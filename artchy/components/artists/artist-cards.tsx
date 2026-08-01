@@ -48,6 +48,7 @@ export function ArtistCards({ variant }: { variant: "home" | "page" }) {
                   <Image
                     src={artist.image}
                     alt={`Portret van ${artist.name}`}
+                    loading="eager"
                     fill
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     className="object-cover transition-opacity duration-500 group-hover:opacity-85"

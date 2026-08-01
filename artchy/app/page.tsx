@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
  * zodat browsers na elke beeldwijziging automatisch de nieuwe versie laden.
  */
 import heroImg from "@/public/hero.jpg";
+import heroMobileImg from "@/public/hero-mobile.jpg";
 import collectionJoshImg from "@/public/collection-josh.jpg";
 import collectionTajiImg from "@/public/collection-taji.jpg";
 import collectionBrassImg from "@/public/collection-brass.jpg";
@@ -80,13 +81,23 @@ export default function Home() {
       <main className="flex-1">
         {/* 3. Hero — het beeld ís de hero, geen tekst eroverheen */}
         <section className="relative min-h-[85svh]">
+          {/* Art-direction: hoge crop (man + TAJI-print) op smal, breed beeld op md+ */}
           <Image
-            src={heroImg}
+            src={heroMobileImg}
             alt="Man met TAJI-hoodie voor de skyline bij avondlicht"
             fill
             priority
             sizes="100vw"
-            className="object-cover"
+            className="object-cover object-[center_35%] md:hidden"
+          />
+          <Image
+            src={heroImg}
+            alt=""
+            aria-hidden
+            fill
+            priority
+            sizes="100vw"
+            className="hidden object-cover md:block"
           />
           <div
             className="absolute inset-0 bg-gradient-to-b from-coal/40 via-transparent to-coal"
@@ -95,7 +106,7 @@ export default function Home() {
         </section>
 
         {/* 4. Featured collections */}
-        <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+        <section className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 md:py-24">
           <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
             <h2 className="font-display text-xl uppercase text-snow sm:text-2xl">
               Featured collections
@@ -125,6 +136,7 @@ export default function Home() {
                     <Image
                       src={collection.image}
                       alt={`${collection.name} collectie`}
+                      loading="eager"
                       fill
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                       className="object-cover transition-opacity duration-500 group-hover:opacity-80"
@@ -146,7 +158,7 @@ export default function Home() {
 
         {/* 5. How art becomes fashion */}
         <section className="bg-bone text-coal">
-          <div className="mx-auto w-full max-w-6xl px-4 py-16 text-center sm:px-6">
+          <div className="mx-auto w-full max-w-6xl px-4 py-14 text-center sm:px-6 md:py-24">
             <h2 className="text-heading">How art becomes fashion</h2>
             <p className="mt-2 text-sm text-coal/70">
               This is how we turn art into limited wearable pieces.
@@ -169,7 +181,7 @@ export default function Home() {
         </section>
 
         {/* 6. Limited drop + countdown */}
-        <section className="mx-auto grid w-full max-w-6xl items-center gap-10 overflow-x-clip px-4 py-20 sm:px-6 lg:grid-cols-2">
+        <section className="mx-auto grid w-full max-w-6xl items-center gap-10 overflow-x-clip px-4 py-14 sm:px-6 md:py-24 lg:grid-cols-2">
           <div className="min-w-0">
             <p className="label text-gold">Limited release</p>
             <h2 className="mt-3 text-heading text-snow">
@@ -201,6 +213,7 @@ export default function Home() {
               <Image
                 src={dropHoodieImg}
                 alt="De limited drop hoodie met TAJI-artwork"
+                loading="eager"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover"
@@ -210,7 +223,7 @@ export default function Home() {
         </section>
 
         {/* 7. Meet the creators */}
-        <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+        <section className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 md:py-24">
           <p className="label text-gold">The world of Artchy</p>
           <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
             <h2 className="text-heading text-snow">Meet the creators.</h2>
@@ -228,7 +241,7 @@ export default function Home() {
 
         {/* 8. A new generation of creativity */}
         <section className="border-t border-line">
-          <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2">
+          <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-4 py-14 sm:px-6 md:py-24 lg:grid-cols-2">
             <div className="min-w-0">
               <h2 className="text-heading text-snow">
                 A new generation of creativity
@@ -245,6 +258,7 @@ export default function Home() {
               <Image
                 src={generationImg}
                 alt="Twee generaties voor de skyline"
+                loading="eager"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover"
@@ -281,7 +295,7 @@ export default function Home() {
 
         {/* 9. Join the community — ivoren balk */}
         <section className="bg-bone text-coal">
-          <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-6 px-4 py-12 sm:px-6">
+          <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-6 px-4 py-10 sm:px-6 md:py-14">
             <div className="min-w-0">
               <h2 className="font-display text-xl uppercase sm:text-2xl">
                 Join the Artchy community
