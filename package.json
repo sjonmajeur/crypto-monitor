@@ -1,4 +1,9 @@
 {
+  "engines": { "node": ">=20.9.0" },
+  "scripts": {
+    "build": "cd artchy && npm ci && npm run build",
+    "start": "cd artchy && npm run start"
+  },
   "devDependencies": {
     "gh-pages": "^6.3.0"
   }
