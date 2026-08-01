@@ -39,7 +39,20 @@ async function writeLines(lines: DemoLine[]): Promise<void> {
   });
 }
 
-/** Zorgt voor een stabiel cart-token (zelfde gid-vorm als Shopify). */
+/**
+ * Leest het cart-id zonder te schrijven — veilig tijdens server-render
+ * (cookies mogen alleen in actions gezet worden). Zonder cookie een
+ * tijdelijk placeholder-id; het echte id ontstaat bij de eerste
+ * cart-actie via ensureDemoCartId.
+ */
+async function readDemoCartId(): Promise<string> {
+  const jar = await cookies();
+  const existing = jar.get(CART_COOKIE)?.value;
+  if (existing?.includes("/Cart/demo-")) return existing;
+  return "gid://shopify/Cart/demo-pending?key=demo";
+}
+
+/** Zorgt voor een stabiel cart-token; alleen aanroepen vanuit actions. */
 export async function ensureDemoCartId(): Promise<string> {
   const jar = await cookies();
   const existing = jar.get(CART_COOKIE)?.value;
@@ -98,7 +111,7 @@ function buildCart(cartId: string, lines: DemoLine[]): Cart {
 }
 
 export async function demoGetCart(): Promise<Cart> {
-  const cartId = await ensureDemoCartId();
+  const cartId = await readDemoCartId();
   return buildCart(cartId, await readLines());
 }
 

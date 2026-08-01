@@ -126,7 +126,7 @@ export default async function ProductPage({ params }: { params: Params }) {
         {related.length > 0 && (
           <section className="mx-auto w-full max-w-6xl px-6 pb-24">
             <h2 className="text-subheading text-snow">You may also like</h2>
-            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
