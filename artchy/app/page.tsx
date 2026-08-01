@@ -119,12 +119,14 @@ export default function Home() {
               <ArrowRight className="size-4" aria-hidden />
             </Link>
           </div>
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {COLLECTIONS.map((collection, i) => (
-              <Reveal key={collection.handle} delay={i * 60}>
+          <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+            {COLLECTIONS.map((collection) => (
+              <Reveal key={collection.handle}>
+                {/* Ontwerpcompositie: tekst links, foto rechts (~55%);
+                    mobiel gestackt met de foto boven */}
                 <Link
                   href={`/shop?type=${collection.handle}`}
-                  className="group relative block h-full border border-snow/15 bg-night p-4 transition-colors hover:border-gold/60"
+                  className="group relative flex h-full min-h-52 flex-col border border-snow/15 bg-night transition-colors hover:border-gold/60 sm:flex-row"
                 >
                   <span
                     className="absolute right-3 top-3 z-10 flex size-8 items-center justify-center border border-snow/30 bg-coal/70 text-snow transition-colors group-hover:border-gold group-hover:text-gold"
@@ -132,24 +134,28 @@ export default function Home() {
                   >
                     <ArrowUpRight className="size-4" />
                   </span>
-                  <div className="relative aspect-square w-full overflow-hidden">
+                  <div className="relative aspect-[4/3] w-full overflow-hidden sm:order-2 sm:aspect-auto sm:w-[55%] sm:self-stretch">
                     <Image
                       src={collection.image}
                       alt={`${collection.name} collectie`}
                       loading="eager"
                       fill
-                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      sizes="(min-width: 1024px) 18vw, (min-width: 640px) 55vw, 100vw"
                       className="object-cover transition-opacity duration-500 group-hover:opacity-80"
                     />
                   </div>
-                  <h3 className="mt-4 font-display text-2xl uppercase text-snow">
-                    {collection.name}
-                  </h3>
-                  <p className="mt-1 text-sm text-ash">{collection.tagline}</p>
-                  <p className="label mt-4 flex items-center gap-2 text-gold group-hover:text-snow">
-                    Explore collection{" "}
-                    <ArrowRight className="size-4" aria-hidden />
-                  </p>
+                  <div className="flex flex-1 flex-col p-5 sm:order-1">
+                    <h3 className="font-display text-2xl uppercase text-snow">
+                      {collection.name}
+                    </h3>
+                    <p className="mt-2 text-sm leading-snug text-ash">
+                      {collection.tagline}
+                    </p>
+                    <p className="label mt-auto flex items-center gap-2 pt-4 text-gold group-hover:text-snow">
+                      Explore collection{" "}
+                      <ArrowRight className="size-4" aria-hidden />
+                    </p>
+                  </div>
                 </Link>
               </Reveal>
             ))}

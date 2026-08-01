@@ -38,16 +38,16 @@ export function Countdown({ target }: { target: string }) {
 
   return (
     <div
-      className="grid max-w-md grid-cols-4 gap-4 sm:gap-8"
+      className="grid max-w-lg grid-cols-4 gap-4 sm:gap-8"
       role="timer"
       aria-label="Time until drop closes"
     >
       {cells.map((cell) => (
         <div key={cell.label} className="min-w-0">
-          <p className="font-display text-3xl text-gold tabular-nums sm:text-4xl">
+          <p className="font-display text-5xl text-gold tabular-nums sm:text-7xl">
             {cell.value === null ? "--" : String(cell.value).padStart(2, "0")}
           </p>
-          <p className="label mt-1 text-ash">{cell.label}</p>
+          <p className="label mt-2 text-ash">{cell.label}</p>
         </div>
       ))}
     </div>

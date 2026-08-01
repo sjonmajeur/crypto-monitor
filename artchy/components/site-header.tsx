@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -8,6 +9,7 @@ import { Menu, Search, User, X } from "lucide-react";
 import { CartTrigger } from "@/components/cart/cart-trigger";
 import { SandboxBanner } from "@/components/sandbox-banner";
 import { cn } from "@/lib/utils";
+import logoTaji from "@/public/logo-taji.png";
 
 const NAV = [
   { href: "/shop", label: "Shop" },
@@ -81,9 +83,17 @@ export function SiteHeader() {
 
         <Link
           href="/"
-          className="justify-self-center font-display text-2xl uppercase tracking-tight text-snow"
+          aria-label="Artchy — home"
+          className="justify-self-center"
         >
-          Artchy
+          {/* TAJI-mascotte uit het ontwerp; screen-blend laat de donkere
+              achtergrond wegvallen in de vrijwel zwarte header */}
+          <Image
+            src={logoTaji}
+            alt="Artchy"
+            className="h-11 w-auto mix-blend-screen"
+            priority
+          />
         </Link>
 
         <div className="flex items-center justify-end gap-4">
