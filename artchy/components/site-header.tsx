@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, Search, User, X } from "lucide-react";
 
 import { CartTrigger } from "@/components/cart/cart-trigger";
 import { SandboxBanner } from "@/components/sandbox-banner";
+import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/shop", label: "Shop" },
@@ -22,6 +24,9 @@ const NAV = [
  */
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(`${href}/`);
 
   // Sluiten op Escape; links sluiten het menu zelf via onClick.
   useEffect(() => {
@@ -48,7 +53,11 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="label text-snow transition-colors hover:text-gold"
+                aria-current={isActive(item.href) ? "page" : undefined}
+                className={cn(
+                  "label transition-colors hover:text-gold",
+                  isActive(item.href) ? "text-gold" : "text-snow",
+                )}
               >
                 {item.label}
               </Link>
@@ -107,7 +116,11 @@ export function SiteHeader() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="label block py-3 text-snow transition-colors hover:text-gold"
+                  aria-current={isActive(item.href) ? "page" : undefined}
+                  className={cn(
+                    "label block py-3 transition-colors hover:text-gold",
+                    isActive(item.href) ? "text-gold" : "text-snow",
+                  )}
                   onClick={() => setMenuOpen(false)}
                 >
                   {item.label}

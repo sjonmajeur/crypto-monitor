@@ -44,7 +44,7 @@ export function Countdown({ target }: { target: string }) {
     >
       {cells.map((cell) => (
         <div key={cell.label} className="min-w-0">
-          <p className="font-display text-2xl text-gold tabular-nums sm:text-3xl">
+          <p className="font-display text-3xl text-gold tabular-nums sm:text-4xl">
             {cell.value === null ? "--" : String(cell.value).padStart(2, "0")}
           </p>
           <p className="label mt-1 text-ash">{cell.label}</p>

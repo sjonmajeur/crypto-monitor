@@ -15,7 +15,7 @@ export function NewsletterForm() {
   if (joined) {
     return (
       <p
-        className="flex items-center gap-2 text-sm text-gold"
+        className="flex items-center gap-2 text-sm text-coal"
         role="status"
         data-placeholder="true"
       >
@@ -43,9 +43,9 @@ export function NewsletterForm() {
         type="email"
         required
         placeholder="Enter your email"
-        className="h-11 min-w-0 flex-1 border border-line bg-night px-4 text-sm text-snow placeholder:text-ash"
+        className="h-11 min-w-0 flex-1 border border-coal/30 bg-white px-4 text-sm text-coal placeholder:text-coal/50"
       />
-      <Button type="submit" variant="outline" className="shrink-0 gap-2">
+      <Button type="submit" variant="dark" className="shrink-0 gap-2">
         Join the community <ArrowRight className="size-4" aria-hidden />
       </Button>
     </form>

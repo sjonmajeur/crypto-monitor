@@ -9,10 +9,10 @@
   --coal: #0a0a0a; /* pagina-achtergrond */
   --night: #141414; /* kaarten, secundaire donkere vlakken */
   --line: #2a2a2a; /* borders/dividers op donker */
-  --bone: #f2efea; /* lichte secties ("How art becomes fashion") */
-  --gold: #c9a227; /* accent: labels, countdown, CTA's */
+  --bone: #f2efe9; /* lichte secties ("How art becomes fashion") */
+  --gold: #c9a24b; /* accent: labels, countdown, CTA's */
   --snow: #ffffff;
-  --ash: #a3a3a3; /* gedempte tekst op donker */
+  --ash: #9a968e; /* gedempte tekst op donker */
 
   --background: var(--coal);
   --foreground: var(--snow);
@@ -51,13 +51,14 @@ h3 {
   font-family: var(--font-anton), Impact, sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.01em;
+  line-height: 0.95;
 }
 
-/* Kleine uppercase-labels met ruime tracking, zoals in het model */
+/* Eyebrows/labels/menu: 11-12px caps met letterspacing 0.15em */
 .label {
-  font-size: 0.6875rem;
+  font-size: 0.71875rem;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.15em;
 }
 
 /* Scroll-reveal: opacity + 12px translate, 400ms, één keer */

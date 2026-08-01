@@ -44,6 +44,7 @@ const MENU = [
   { href: "/taji", label: "Taji" },
   { href: "/how-it-works", label: "How it Works" },
   { href: "/about", label: "About" },
+  { href: "/about", label: "Contact" },
 ];
 
 const INFO = [
@@ -71,7 +72,7 @@ export function SiteFooter() {
           <p className="label mb-4 text-snow">Menu</p>
           <ul className="space-y-2 text-sm text-ash">
             {MENU.map((item) => (
-              <li key={item.href}>
+              <li key={item.label}>
                 <Link href={item.href} className="hover:text-gold">
                   {item.label}
                 </Link>
