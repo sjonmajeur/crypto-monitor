@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 
-import { resetSandboxAction } from "@/app/actions/sandbox";
+import { resetSandboxAction } from "@/app/(frontend)/actions/sandbox";
 import { useCart } from "@/components/cart/cart-context";
 import { Button } from "@/components/ui/button";
 

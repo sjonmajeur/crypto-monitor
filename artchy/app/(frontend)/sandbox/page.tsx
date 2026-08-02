@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { ensureInventoryBaseline } from "@/app/actions/sandbox";
+import { ensureInventoryBaseline } from "@/app/(frontend)/actions/sandbox";
 import {
   DemoFillButton,
   ResetSandboxButton,
