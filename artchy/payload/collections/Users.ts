@@ -1,5 +1,7 @@
 import type { Access, CollectionConfig } from "payload";
 
+import { ipUitHeaders, logLoginAttempt } from "../loginLog";
+
 /** Payload typt user pas na codegen; daarom hier een losse check. */
 function isBeheerder(user: unknown): boolean {
   return (user as { rol?: string } | null)?.rol === "beheerder";
@@ -59,37 +61,32 @@ export const Users: CollectionConfig = {
     },
   ],
   hooks: {
+    beforeChange: [
+      async ({ data, operation, req }) => {
+        // De allereerste gebruiker is altijd beheerder, anders kan
+        // niemand gebruikers beheren of de inloggeschiedenis inzien.
+        if (operation !== "create") return data;
+        try {
+          const { totalDocs } = await req.payload.count({
+            collection: "users",
+          });
+          if (totalDocs === 0) return { ...data, rol: "beheerder" };
+        } catch {
+          // Telt de database (nog) niet mee, dan de invoer laten staan.
+        }
+        return data;
+      },
+    ],
     afterLogin: [
       async ({ req, user }) => {
-        // Loggen mag nooit een login blokkeren.
-        try {
-          await req.payload.create({
-            collection: "inloggeschiedenis",
-            data: {
-              gebruiker: user.id,
-              email: user.email,
-              tijdstip: new Date().toISOString(),
-              ipAdres: ipFromRequest(req),
-              resultaat: "gelukt",
-            },
-            overrideAccess: true,
-          });
-        } catch (error) {
-          req.payload.logger.error(
-            { err: error },
-            "Kon login niet loggen in inloggeschiedenis",
-          );
-        }
+        logLoginAttempt(req.payload, {
+          gebruikerId: user.id as number,
+          email: user.email,
+          ipAdres: ipUitHeaders(req.headers),
+          resultaat: "gelukt",
+        });
       },
     ],
   },
 };
 
-/** Best-effort IP: proxy-header eerst, anders de socket. */
-export function ipFromRequest(req: {
-  headers?: Headers;
-}): string {
-  const forwarded = req.headers?.get?.("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0].trim();
-  return req.headers?.get?.("x-real-ip") ?? "onbekend";
-}

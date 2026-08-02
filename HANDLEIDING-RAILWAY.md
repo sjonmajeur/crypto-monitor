@@ -53,9 +53,9 @@ kun je alles vanuit de browser beheren. Reken op ongeveer 15 minuten.
 2. Wacht tot de deploy groen is (± 3 minuten).
 
 Bij deze eerste start gebeurt er automatisch twee dingen: de database
-krijgt de juiste tabellen, en het CMS wordt gevuld met de teksten die
-nu op de site staan (inclusief Josh, Taji en Brass). Je begint dus niet
-met een leeg paneel.
+krijgt de juiste tabellen (uit `artchy/payload/schema.sql`), en het CMS
+wordt gevuld met de teksten die nu op de site staan (inclusief Josh,
+Taji en Brass). Je begint dus niet met een leeg paneel.
 
 ## Stap 5 — Het eerste beheerdersaccount aanmaken
 
@@ -97,3 +97,29 @@ zonder `https://` en redeploy.
 **Ik kan niet inloggen**
 Gebruik **Forgot password** op de loginpagina. Werkt dat niet, dan kan
 een andere beheerder je wachtwoord opnieuw instellen via **Gebruikers**.
+
+
+---
+
+## Voor de ontwikkelaar: schema bijwerken
+
+De tabellen worden bij een lege database aangemaakt uit
+`artchy/payload/schema.sql`. Payload werkt het schema namelijk alleen
+automatisch bij buiten productie.
+
+Voeg je later velden toe aan een collectie of global, genereer dit
+bestand dan opnieuw:
+
+```bash
+cd artchy
+# 1. draai de dev-server één keer tegen een (test)database:
+DATABASE_URI=postgresql://... PAYLOAD_SECRET=... npm run dev
+# 2. dump het bijgewerkte schema:
+pg_dump "$DATABASE_URI" --schema-only --no-owner --no-privileges \
+  --no-comments | grep -v '^\\restrict\|^\\unrestrict' \
+  > payload/schema.sql
+```
+
+Bij een bestaande productiedatabase moeten nieuwe kolommen daarna
+handmatig worden toegevoegd (`ALTER TABLE ...`), of laat Payload dat
+doen door de dev-server één keer tegen die database te draaien.

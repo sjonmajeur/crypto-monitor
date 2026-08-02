@@ -2,8 +2,13 @@ import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Railway draait de app standalone (kleinere image, geen node_modules nodig).
-  output: "standalone",
+  /*
+   * Bewust GEEN output: "standalone". Payload werkt zijn database-schema
+   * bij via drizzle-kit, dat in een standalone bundel ontbreekt — dan
+   * blijven de tabellen leeg en start het adminpaneel niet. Railway
+   * (Nixpacks) houdt node_modules toch bij de app, dus standalone levert
+   * hier geen winst op.
+   */
   // De parent-repo heeft een eigen lockfile; pin de root op deze map.
   turbopack: {
     root: __dirname,

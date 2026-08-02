@@ -12,6 +12,7 @@ import { Media } from "./payload/collections/Media";
 import { Users } from "./payload/collections/Users";
 import { Homepage } from "./payload/globals/Homepage";
 import { SiteSettings } from "./payload/globals/SiteSettings";
+import { ipUitHeaders, logLoginAttempt } from "./payload/loginLog";
 import { seedIfEmpty } from "./payload/seed";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -62,27 +63,14 @@ export default buildConfig({
   hooks: {
     // Mislukte inlogpogingen belanden ook in de inloggeschiedenis.
     afterError: [
-      async ({ error, req }) => {
-        const isLoginRoute = req?.url?.includes("/api/users/login");
-        if (!isLoginRoute || !req?.payload) return;
-        try {
-          const body = (req as { data?: { email?: string } }).data;
-          await req.payload.create({
-            collection: "inloggeschiedenis",
-            data: {
-              email: body?.email ?? "onbekend",
-              tijdstip: new Date().toISOString(),
-              ipAdres:
-                req.headers?.get("x-forwarded-for")?.split(",")[0].trim() ??
-                "onbekend",
-              resultaat: "mislukt",
-            },
-            overrideAccess: true,
-          });
-        } catch {
-          // Logging mag de foutafhandeling nooit blokkeren.
-        }
-        void error;
+      async ({ req }) => {
+        if (!req?.url?.includes("/api/users/login") || !req.payload) return;
+        const body = (req as { data?: { email?: string } }).data;
+        logLoginAttempt(req.payload, {
+          email: body?.email ?? "onbekend",
+          ipAdres: ipUitHeaders(req.headers),
+          resultaat: "mislukt",
+        });
       },
     ],
   },

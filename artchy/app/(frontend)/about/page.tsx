@@ -9,6 +9,10 @@ export const metadata: Metadata = {
     "Artchy connects creativity, culture, and identity through fashion.",
 };
 
+/* Teksten komen uit het CMS: per bezoek ophalen zodat een
+   publicatie meteen zichtbaar is. */
+export const dynamic = "force-dynamic";
+
 export default function AboutPage() {
   return (
     <>

@@ -1,7 +1,19 @@
 import type { Payload } from "payload";
 
-import { ARTISTS } from "@/lib/artists";
-import { DEFAULT_HOMEPAGE, DEFAULT_SITE_SETTINGS } from "@/lib/cms/defaults";
+import artistsContent from "../content/artists.json";
+import { DEFAULT_HOMEPAGE, DEFAULT_SITE_SETTINGS } from "../lib/cms/defaults";
+
+/*
+ * Bewust geen import uit lib/artists.ts: die laadt afbeeldingen via de
+ * Next-bundler en is daardoor niet bruikbaar in de Payload-CLI.
+ */
+const ARTISTS = artistsContent.artists.map((a) => ({
+  name: a.naam,
+  slug: a.naam.toLowerCase().replaceAll(" ", "-"),
+  role: a.subtitel,
+  tagline: a.tagline,
+  bio: a.bio,
+}));
 
 /** Zet platte alinea's om naar het Lexical-formaat van de rich text-editor. */
 function paragraphsToLexical(paragraphs: string[]) {
