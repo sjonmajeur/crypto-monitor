@@ -12,7 +12,10 @@ import { ARTISTS } from "@/lib/artists";
 import { cn } from "@/lib/utils";
 import logoTaji from "@/public/logo-taji.png";
 
-const NAV_BEFORE = [{ href: "/shop", label: "Shop" }];
+const NAV_BEFORE = [
+  { href: "/", label: "Home" },
+  { href: "/shop", label: "Shop" },
+];
 const NAV_AFTER = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/about", label: "About" },
