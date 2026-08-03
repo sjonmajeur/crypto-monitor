@@ -132,7 +132,31 @@ bij elke deploy leeg wordt. Controleer stap 2 en 3.
 afgeleid uit `BUCKET_ENDPOINT`) of vul exact dezelfde host in, zonder
 `https://`. Daarna redeployen.
 
-**Uploaden mislukt met "Something went wrong."**
+**Uploaden mislukt — zo vind je de oorzaak**
+
+Sinds de laatste update krijg je in het paneel een echte melding in
+plaats van "Something went wrong", en staat de precieze S3-fout in de
+serverlogs onder **"Upload naar de bucket mislukt"** (foutcode,
+HTTP-status, endpoint, bucket en regio — nooit je sleutels).
+
+Sneller nog: log in als eigenaar en open
+**jouw-website-adres/api/opslag-test**. Dat schrijft één testbestand
+naar de bucket, leest het terug en ruimt het op, los van het CMS. Het
+antwoord vertelt in gewone taal of de opslag werkt en zo niet, wat de
+echte fout is. (Voor iedereen zonder eigenaarsaccount bestaat deze
+pagina niet.)
+
+Wat Railway Object Storage precies verwacht (zo staat het nu ook in de
+code, in `artchy/payload/opslag.ts`):
+
+| Instelling | Waarde |
+| --- | --- |
+| Endpoint | `https://<host>` — mét schema, zónder bucketnaam, zonder slash op het eind |
+| Bucketnaam | In het **pad**, niet in de hostnaam (`forcePathStyle: true`; staat vast in de code) |
+| Regio | De `REGION`/`AWS_REGION` uit de bucket-variabelen; nooit `auto` |
+| Checksums | `WHEN_REQUIRED` (staat vast in de code) — nieuwere AWS-SDK's sturen standaard bij elke upload een CRC32-checksum mee en dat weigeren veel S3-compatibele diensten, waaronder MinIO-achtige opslag zoals die van Railway |
+
+**Oudere checklist bij uploadproblemen**
 Bijna altijd `BUCKET_ENDPOINT`. Controleer op deze volgorde:
 
 1. Begint de waarde met `https://`? Zo niet, zet het ervoor.

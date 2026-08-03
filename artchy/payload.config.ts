@@ -16,10 +16,13 @@ import { SiteSettings } from "./payload/globals/SiteSettings";
 import { ipUitHeaders, logActiviteit } from "./payload/activiteitenlog";
 import { nederlandsePayloadTaal, nederlandseVertalingen } from "./payload/i18n";
 import {
+  bucketClientConfig,
   bucketCompleet,
   bucketEndpoint,
   bucketNaam,
+  bucketOverzicht,
   bucketRegio,
+  s3FoutDetails,
 } from "./payload/opslag";
 import { migraties } from "./payload/migraties";
 import { seedIfEmpty } from "./payload/seed";
@@ -70,19 +73,11 @@ export default buildConfig({
     s3Storage({
       collections: { media: true },
       bucket: bucketNaam,
-      config: {
-        // Genormaliseerd in payload/opslag.ts: altijd mét https://,
-        // zonder slash op het eind en zonder de bucketnaam erin.
-        endpoint: bucketEndpoint(),
-        region: bucketRegio(),
-        credentials: {
-          accessKeyId: process.env.BUCKET_ACCESS_KEY_ID ?? "",
-          secretAccessKey: process.env.BUCKET_SECRET_ACCESS_KEY ?? "",
-        },
-        // Railway Object Storage is MinIO-achtig: de bucket hoort in het
-        // pad (endpoint/bucket/bestand), niet in de hostnaam.
-        forcePathStyle: true,
-      },
+      // Eén gedeelde clientconfig (payload/opslag.ts): genormaliseerd
+      // endpoint, forcePathStyle en de checksum-instellingen die
+      // S3-compatibele opslag zoals Railway nodig heeft. Het
+      // diagnose-endpoint /api/opslag-test gebruikt exact dezelfde.
+      config: bucketClientConfig(),
     }),
   ],
   // Bij de eerste start het CMS vullen met de huidige teksten.
@@ -114,8 +109,37 @@ export default buildConfig({
     : undefined,
   secret: process.env.PAYLOAD_SECRET ?? "artchy-dev-secret-vervang-mij",
   hooks: {
-    // Mislukte inlogpogingen belanden ook in de inloggeschiedenis.
     afterError: [
+      // Mislukte uploads: de echte S3-fout naar de serverlogs (zonder
+      // sleutels) en een duidelijke Nederlandse melding naar het paneel
+      // in plaats van "Something went wrong".
+      async ({ error, req }) => {
+        if (!req?.url?.includes("/api/media")) return;
+        // Gewone fouten (bijv. ontbrekende alt-tekst, 4xx) houden hun
+        // eigen nette melding; alleen echte serverfouten zijn opslag.
+        const status = (error as { status?: number })?.status;
+        if (typeof status === "number" && status < 500) return;
+        const details = s3FoutDetails(error);
+        req.payload?.logger?.error(
+          { opslag: bucketOverzicht(), s3: details },
+          "Upload naar de bucket mislukt",
+        );
+        return {
+          status: 502,
+          response: {
+            errors: [
+              {
+                message:
+                  "De foto kon niet naar de opslag worden geschreven " +
+                  `(${details.fout}${details.httpStatus ? `, HTTP ${details.httpStatus}` : ""}). ` +
+                  "De beheerder vindt de precieze oorzaak in de serverlogs " +
+                  'onder "Upload naar de bucket mislukt".',
+              },
+            ],
+          },
+        };
+      },
+      // Mislukte inlogpogingen belanden ook in de inloggeschiedenis.
       async ({ req }) => {
         if (!req?.url?.includes("/api/users/login") || !req.payload) return;
         const body = (req as { data?: { email?: string } }).data;

@@ -55,6 +55,8 @@ afgesproken.
 
 | Live bleek de database al te bestaan; de schema.sql-aanpak draaide alleen op een lege database en liet /admin crashen op de nieuwe kolommen | Vervangen door echte migraties (`payload/migraties/`, `prodMigrations`): bij het opstarten in productie draait Payload automatisch wat nog niet is geweest. Bestaande gebruikers worden op "goedgekeurd" gezet en de oudste gebruiker wordt eigenaar; oude logregels krijgen met terugwerkende kracht een actie en eigenaarsregels worden verborgen | Controleer na de deploy of jouw account inderdaad de eigenaar is geworden |
 
+| Upload bleef live falen; de logbijlagen kwamen niet mee en railway.com is vanuit deze omgeving onbereikbaar, dus de echte fout was onzichtbaar | Foutafhandeling eerst: de S3-fout gaat nu volledig naar de serverlogs en het paneel toont een Nederlandse melding; /api/opslag-test (alleen eigenaar) test de bucket los van het CMS. Meest waarschijnlijke oorzaak alvast verholpen: AWS-SDK ≥ 3.729 stuurt standaard CRC32-checksums die MinIO-achtige opslag weigert → requestChecksumCalculation/responseChecksumValidation op WHEN_REQUIRED | Open /api/opslag-test als eigenaar en stuur het antwoord door als het nog faalt |
+
 **Nooit verzonnen (bewust):** prijzen, voorraad, varianten en SKU's. Die
 komen uitsluitend uit Shopify; zonder keys faalt de weergave hard met een
 duidelijke melding in plaats van mock-data.
