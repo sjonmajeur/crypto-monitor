@@ -32,6 +32,10 @@ const STEPS = [
   },
 ];
 
+/* Teksten komen uit het CMS: per bezoek ophalen zodat een
+   publicatie meteen zichtbaar is. */
+export const dynamic = "force-dynamic";
+
 export default function HowItWorksPage() {
   return (
     <>

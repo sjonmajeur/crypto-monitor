@@ -16,7 +16,7 @@ import {
   getCartAction,
   removeCartLineAction,
   updateCartLineAction,
-} from "@/app/actions/cart";
+} from "@/app/(frontend)/actions/cart";
 import type { Cart } from "@/lib/shopify/schemas";
 
 type CartContextValue = {

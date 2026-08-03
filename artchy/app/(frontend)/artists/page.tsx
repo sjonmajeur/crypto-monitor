@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { ArtistCards } from "@/components/artists/artist-cards";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { getArtists } from "@/lib/cms/content";
 
 export const metadata: Metadata = {
   title: "Artists",
@@ -15,6 +16,7 @@ export default async function ArtistsPage({
   searchParams: Promise<{ artist?: string }>;
 }) {
   const { artist } = await searchParams;
+  const artists = await getArtists();
 
   return (
     <>
@@ -30,7 +32,7 @@ export default async function ArtistsPage({
               bijbehorende bio opent, ook als je al op /artists staat */}
           <ArtistCards
             key={artist ?? "none"}
-            variant="page"
+            artists={artists}
             initialOpenSlug={artist}
           />
         </div>

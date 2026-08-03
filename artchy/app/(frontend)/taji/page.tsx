@@ -14,6 +14,10 @@ export const metadata: Metadata = {
  * Placeholder tot er een Figma-frame voor de Taji-wereld is — zie
  * DECISIONS.md.
  */
+/* Teksten komen uit het CMS: per bezoek ophalen zodat een
+   publicatie meteen zichtbaar is. */
+export const dynamic = "force-dynamic";
+
 export default function TajiPage() {
   return (
     <>

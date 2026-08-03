@@ -18,6 +18,7 @@ import { Reveal } from "@/components/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
+import { getArtists, getHomepageContent } from "@/lib/cms/content";
 
 /*
  * Statische imports: Next hasht de bestandsnamen (/_next/static/media/…),
@@ -37,46 +38,26 @@ import generationImg from "@/public/generation.jpg";
  * vervangen zonder codewijziging. Zie DECISIONS.md.
  */
 
-// Placeholder: drop sluit ~2 weken na oplevering (2026-08-01).
-const DROP_ENDS_AT = "2026-08-15T22:00:00+02:00";
+/** Iconen bij de vier stappen; de teksten komen uit het CMS. */
+const STEP_ICONS = [Pencil, Lock, Shirt, User];
 
-const COLLECTIONS = [
-  {
-    handle: "josh",
-    name: "Josh",
-    image: collectionJoshImg,
-    tagline: "Fearless creativity born from manga, heroes and imagination.",
-  },
-  {
-    handle: "taji",
-    name: "Taji",
-    image: collectionTajiImg,
-    tagline: "The emotion creature. Wear your feelings. That's TAJI.",
-  },
-  {
-    handle: "brass",
-    name: "Brass",
-    image: collectionBrassImg,
-    tagline: "Luxury meets identity. Timeless art, crafted to last.",
-  },
+/** Beelden die gelden zolang het CMS er geen heeft. */
+const COLLECTION_FALLBACKS = [
+  collectionJoshImg,
+  collectionTajiImg,
+  collectionBrassImg,
 ];
 
-const STEPS = [
-  { icon: Pencil, title: "Choose", text: "Discover art from our creators." },
-  { icon: Lock, title: "Unlock", text: "The community unlocks the design." },
-  {
-    icon: Shirt,
-    title: "Produce",
-    text: "We produce limited editions, never mass.",
-  },
-  {
-    icon: User,
-    title: "Wear",
-    text: "You wear more than clothing. You wear art.",
-  },
-];
+/* Teksten komen uit het CMS: per bezoek ophalen zodat een
+   publicatie meteen zichtbaar is. */
+export const dynamic = "force-dynamic";
 
-export default function Home() {
+export default async function Home() {
+  const [content, artists] = await Promise.all([
+    getHomepageContent(),
+    getArtists(),
+  ]);
+  const { hero } = content;
   return (
     <>
       <SiteHeader />
@@ -89,15 +70,15 @@ export default function Home() {
         <section className="relative flex min-h-[85svh] items-end md:items-center">
           {/* Art-direction: hoge crop (man + TAJI-print) op smal, breed beeld op md+ */}
           <Image
-            src={heroMobileImg}
-            alt="Man met TAJI-hoodie voor de skyline bij avondlicht"
+            src={hero.afbeeldingMobiel ?? heroMobileImg}
+            alt={hero.afbeeldingAlt}
             fill
             priority
             sizes="100vw"
             className="object-cover object-[center_35%] md:hidden"
           />
           <Image
-            src={heroImg}
+            src={hero.afbeelding ?? heroImg}
             alt=""
             aria-hidden
             fill
@@ -117,17 +98,18 @@ export default function Home() {
           />
 
           <div className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6 md:pb-0">
-            <p className="label text-gold">Wearable art platform</p>
+            <p className="label text-gold">{hero.eyebrow}</p>
             <h1 className="mt-4 font-display text-4xl uppercase leading-[0.95] text-snow sm:text-6xl lg:text-7xl">
-              Where
-              <br />
-              Imagination
-              <br />
-              Becomes identity.
+              {hero.titelRegels.map((regel, i) => (
+                <span key={i}>
+                  {i > 0 && <br />}
+                  {regel}
+                </span>
+              ))}
             </h1>
-            <Link href="/shop" className="mt-8 inline-block">
+            <Link href={hero.knopLink} className="mt-8 inline-block">
               <Button className="gap-2">
-                Shop the drop <ArrowRight className="size-4" aria-hidden />
+                {hero.knopTekst} <ArrowRight className="size-4" aria-hidden />
               </Button>
             </Link>
           </div>
@@ -137,7 +119,7 @@ export default function Home() {
         <section className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 md:py-24">
           <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
             <h2 className="font-display text-xl uppercase text-snow sm:text-2xl">
-              Featured collections
+              {content.collectiesTitel}
             </h2>
             <Link
               href="/shop"
@@ -148,12 +130,12 @@ export default function Home() {
             </Link>
           </div>
           <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
-            {COLLECTIONS.map((collection) => (
-              <Reveal key={collection.handle}>
+            {content.collecties.map((collection, index) => (
+              <Reveal key={collection.titel}>
                 {/* Ontwerpcompositie: tekst links, foto rechts (~55%);
                     mobiel gestackt met de foto boven */}
                 <Link
-                  href={`/shop?type=${collection.handle}`}
+                  href={collection.link}
                   className="group relative flex h-full min-h-52 flex-col border border-snow/15 bg-night transition-colors hover:border-gold/60 sm:flex-row"
                 >
                   <span
@@ -164,8 +146,8 @@ export default function Home() {
                   </span>
                   <div className="relative aspect-[4/3] w-full overflow-hidden sm:order-2 sm:aspect-auto sm:w-[55%] sm:self-stretch">
                     <Image
-                      src={collection.image}
-                      alt={`${collection.name} collectie`}
+                      src={collection.afbeelding ?? COLLECTION_FALLBACKS[index % 3]}
+                      alt={`${collection.titel} collectie`}
                       loading="eager"
                       fill
                       sizes="(min-width: 1024px) 18vw, (min-width: 640px) 55vw, 100vw"
@@ -174,7 +156,7 @@ export default function Home() {
                   </div>
                   <div className="flex flex-1 flex-col p-5 sm:order-1">
                     <h3 className="font-display text-2xl uppercase text-snow">
-                      {collection.name}
+                      {collection.titel}
                     </h3>
                     <p className="mt-2 text-sm leading-snug text-ash">
                       {collection.tagline}
@@ -193,23 +175,26 @@ export default function Home() {
         {/* 5. How art becomes fashion */}
         <section className="bg-bone text-coal">
           <div className="mx-auto w-full max-w-6xl px-4 py-14 text-center sm:px-6 md:py-24">
-            <h2 className="text-heading">How art becomes fashion</h2>
+            <h2 className="text-heading">{content.stappenTitel}</h2>
             <p className="mt-2 text-sm text-coal/70">
-              This is how we turn art into limited wearable pieces.
+              {content.stappenSubtitel}
             </p>
             <ol className="mt-10 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
-              {STEPS.map((step, i) => (
-                <li key={step.title} className="flex flex-col items-center">
+              {content.stappen.map((step, i) => {
+                const Icon = STEP_ICONS[i % STEP_ICONS.length];
+                return (
+                <li key={step.titel} className="flex flex-col items-center">
                   <span className="flex size-8 items-center justify-center rounded-full bg-coal font-display text-sm text-snow">
                     {i + 1}
                   </span>
-                  <step.icon className="mt-4 size-6" aria-hidden />
+                  <Icon className="mt-4 size-6" aria-hidden />
                   <h3 className="mt-3 font-display text-base uppercase">
-                    {step.title}
+                    {step.titel}
                   </h3>
-                  <p className="mt-1 text-sm text-coal/70">{step.text}</p>
+                  <p className="mt-1 text-sm text-coal/70">{step.tekst}</p>
                 </li>
-              ))}
+                );
+              })}
             </ol>
           </div>
         </section>
@@ -217,19 +202,18 @@ export default function Home() {
         {/* 6. Limited drop + countdown */}
         <section className="mx-auto grid w-full max-w-6xl items-center gap-10 overflow-x-clip px-4 py-14 sm:px-6 md:py-24 lg:grid-cols-2">
           <div className="min-w-0">
-            <p className="label text-gold">Limited release</p>
+            <p className="label text-gold">{content.dropEyebrow}</p>
             <h2 className="mt-3 text-heading text-snow">
-              This drop is produced only for the community.
+              {content.dropTitel}
             </h2>
-            <p className="mt-3 text-sm text-ash">
-              Once it&apos;s gone, it never returns.
-            </p>
+            <p className="mt-3 text-sm text-ash">{content.dropSubregel}</p>
             <div className="mt-8">
-              <Countdown target={DROP_ENDS_AT} />
+              <Countdown target={content.dropEinddatum} />
             </div>
-            <Link href="/shop" className="mt-10 inline-block">
+            <Link href={content.dropKnopLink} className="mt-10 inline-block">
               <Button variant="outline" className="gap-2">
-                View collection <ArrowRight className="size-4" aria-hidden />
+                {content.dropKnopTekst}{" "}
+                <ArrowRight className="size-4" aria-hidden />
               </Button>
             </Link>
           </div>
@@ -245,7 +229,7 @@ export default function Home() {
             />
             <div className="relative h-full w-full overflow-hidden border border-snow/10 bg-night">
               <Image
-                src={dropHoodieImg}
+                src={content.dropAfbeelding ?? dropHoodieImg}
                 alt="De limited drop hoodie met TAJI-artwork"
                 loading="eager"
                 fill
@@ -258,9 +242,9 @@ export default function Home() {
 
         {/* 7. Meet the creators */}
         <section className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 md:py-24">
-          <p className="label text-gold">The world of Artchy</p>
+          <p className="label text-gold">{content.creatorsEyebrow}</p>
           <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-            <h2 className="text-heading text-snow">Meet the creators.</h2>
+            <h2 className="text-heading text-snow">{content.creatorsTitel}</h2>
             <Link
               href="/artists"
               className="label flex items-center gap-2 text-gold hover:text-snow"
@@ -269,7 +253,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="mt-8">
-            <ArtistCards variant="home" />
+            <ArtistCards artists={artists} />
           </div>
         </section>
 
@@ -278,19 +262,15 @@ export default function Home() {
           <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-4 py-14 sm:px-6 md:py-24 lg:grid-cols-2">
             <div className="min-w-0">
               <h2 className="text-heading text-snow">
-                A new generation of creativity
+                {content.verhaalTitel}
               </h2>
               <p className="mt-4 max-w-prose text-sm leading-relaxed text-ash">
-                Artchy is built on a unique collaboration between generations.
-                From the raw imagination of young artist Josh, to the refined
-                luxury vision of designer Brass, we connect creativity,
-                culture, and identity through fashion. This is more than
-                clothing. This is wearable art.
+                {content.verhaalTekst}
               </p>
             </div>
             <div className="relative aspect-video w-full overflow-hidden border border-line bg-night">
               <Image
-                src={generationImg}
+                src={content.verhaalAfbeelding ?? generationImg}
                 alt="Twee generaties voor de skyline"
                 loading="eager"
                 fill
@@ -332,11 +312,10 @@ export default function Home() {
           <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-6 px-4 py-10 sm:px-6 md:py-14">
             <div className="min-w-0">
               <h2 className="font-display text-xl uppercase sm:text-2xl">
-                Join the Artchy community
+                {content.communityTitel}
               </h2>
               <p className="mt-1 text-sm text-coal/70">
-                Be the first to access drops, exclusive releases, and artist
-                stories.
+                {content.communityTekst}
               </p>
             </div>
             <NewsletterForm />

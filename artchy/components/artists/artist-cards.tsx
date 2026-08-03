@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react";
 
 import { ArtistBioDialog } from "./artist-bio-dialog";
 import { Reveal } from "@/components/reveal";
-import { ARTISTS, findArtist, type Artist } from "@/lib/artists";
+import { ARTISTS, type Artist } from "@/lib/artists";
 
 /**
  * Uniforme artiest-kaarten met bio-popup: beeld altijd 4:5
@@ -16,21 +16,27 @@ import { ARTISTS, findArtist, type Artist } from "@/lib/artists";
  * /artists. Hele kaart klikbaar.
  */
 export function ArtistCards({
+  artists = ARTISTS,
   initialOpenSlug,
 }: {
+  /** Artiesten uit het CMS; zonder CMS de ingebouwde lijst. */
+  artists?: Artist[];
   /** Behouden voor bestaande aanroepen; heeft geen visuele varianten meer. */
   variant?: "home" | "page";
   /** Opent direct de bio van deze artiest (bijv. vanuit het menu). */
   initialOpenSlug?: string;
 }) {
-  const [openArtist, setOpenArtist] = useState<Artist | null>(() =>
-    findArtist(initialOpenSlug),
+  const [openArtist, setOpenArtist] = useState<Artist | null>(
+    () =>
+      artists.find(
+        (a) => a.slug === initialOpenSlug?.toLowerCase(),
+      ) ?? null,
   );
 
   return (
     <>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {ARTISTS.map((artist) => (
+        {artists.map((artist) => (
           <Reveal key={artist.slug} className="h-full">
             <article
               className="group flex h-full cursor-pointer flex-col border border-line bg-night transition-colors hover:border-gold/60"
