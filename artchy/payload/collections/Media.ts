@@ -9,6 +9,8 @@ export const Media: CollectionConfig = {
   slug: "media",
   labels: { singular: "Afbeelding", plural: "Afbeeldingen" },
   admin: {
+    // Technische API-tab verbergen: beheerders hebben er niets aan.
+    hideAPIURL: true,
     group: "Inhoud",
     description:
       "Alle foto's van de website. Upload hier nieuwe beelden en kies ze daarna in een pagina.",

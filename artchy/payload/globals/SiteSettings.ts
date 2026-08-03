@@ -7,6 +7,8 @@ export const SiteSettings: GlobalConfig = {
   slug: "site-instellingen",
   label: "Footer & algemeen",
   admin: {
+    // Technische API-tab verbergen: beheerders hebben er niets aan.
+    hideAPIURL: true,
     group: "Inhoud",
     description:
       "Het menu bovenaan, de footer en de social-links. Deze staan op elke pagina.",
@@ -36,7 +38,7 @@ export const SiteSettings: GlobalConfig = {
                 {
                   name: "link",
                   type: "text",
-                  label: "Link",
+                  label: "Adres (link)",
                   required: true,
                   admin: { description: 'Bijvoorbeeld "/shop".' },
                 },
@@ -47,7 +49,7 @@ export const SiteSettings: GlobalConfig = {
         {
           label: "Footer",
           fields: [
-            { name: "merknaam", type: "text", label: "Merknaam in de footer" },
+            { name: "merknaam", type: "text", label: "Merknaam onderaan" },
             { name: "merkOndertitel", type: "text", label: "Regel onder de merknaam" },
             { name: "merkZin", type: "textarea", label: "Korte zin" },
             {
@@ -56,7 +58,7 @@ export const SiteSettings: GlobalConfig = {
               label: 'Kolom "Menu"',
               fields: [
                 { name: "label", type: "text", label: "Tekst", required: true },
-                { name: "link", type: "text", label: "Link", required: true },
+                { name: "link", type: "text", label: "Adres (link)", required: true },
               ],
             },
             {
@@ -68,7 +70,7 @@ export const SiteSettings: GlobalConfig = {
                 {
                   name: "link",
                   type: "text",
-                  label: "Link (mag leeg)",
+                  label: "Adres (mag leeg blijven)",
                   admin: {
                     description:
                       "Laat leeg als er nog geen pagina is; de tekst wordt dan zonder link getoond.",
@@ -81,7 +83,7 @@ export const SiteSettings: GlobalConfig = {
           ],
         },
         {
-          label: "Socials",
+          label: "Sociale media",
           fields: [
             {
               name: "socials",

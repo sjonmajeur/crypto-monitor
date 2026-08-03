@@ -8,6 +8,8 @@ export const Artists: CollectionConfig = {
   slug: "artiesten",
   labels: { singular: "Artiest", plural: "Artiesten" },
   admin: {
+    // Technische API-tab verbergen: beheerders hebben er niets aan.
+    hideAPIURL: true,
     useAsTitle: "naam",
     defaultColumns: ["naam", "subtitel", "volgorde", "_status"],
     group: "Inhoud",
@@ -33,7 +35,7 @@ export const Artists: CollectionConfig = {
     {
       name: "slug",
       type: "text",
-      label: "Webadres-naam (slug)",
+      label: "Webadres-naam",
       required: true,
       unique: true,
       admin: {
@@ -54,7 +56,7 @@ export const Artists: CollectionConfig = {
     {
       name: "tagline",
       type: "textarea",
-      label: "Korte tagline",
+      label: "Korte omschrijving",
       required: true,
       admin: {
         description:

@@ -13,6 +13,7 @@ import { Users } from "./payload/collections/Users";
 import { Homepage } from "./payload/globals/Homepage";
 import { SiteSettings } from "./payload/globals/SiteSettings";
 import { ipUitHeaders, logLoginAttempt } from "./payload/loginLog";
+import { nederlandsePayloadTaal, nederlandseVertalingen } from "./payload/i18n";
 import { seedIfEmpty } from "./payload/seed";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -35,6 +36,13 @@ export default buildConfig({
     meta: {
       titleSuffix: " — ARTCHY beheer",
     },
+  },
+  // Adminpaneel volledig in het Nederlands, zonder dat een beheerder
+  // iets hoeft in te stellen.
+  i18n: {
+    fallbackLanguage: "nl",
+    supportedLanguages: { nl: nederlandsePayloadTaal },
+    translations: nederlandseVertalingen,
   },
   collections: [Users, Media, Artists, LoginLog],
   globals: [Homepage, SiteSettings],
