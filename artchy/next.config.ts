@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
 
-import { bucketHostnaam } from "./payload/opslag";
+import { bucketEndpoint, bucketHostnaam } from "./payload/opslag";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -33,7 +33,15 @@ const nextConfig: NextConfig = {
        * dat is per definitie de juiste host.
        */
       ...(bucketHostnaam()
-        ? [{ protocol: "https" as const, hostname: bucketHostnaam() as string }]
+        ? [
+            {
+              // Protocol volgt het endpoint (lokaal testen kan http zijn).
+              protocol: bucketEndpoint()?.startsWith("http://")
+                ? ("http" as const)
+                : ("https" as const),
+              hostname: bucketHostnaam() as string,
+            },
+          ]
         : []),
       { protocol: "https" as const, hostname: "**.railway.app" },
       { protocol: "https" as const, hostname: "**.storage.railway.app" },

@@ -93,10 +93,12 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     homepage: Homepage;
+    paginas: Pagina;
     'site-instellingen': SiteInstellingen;
   };
   globalsSelect: {
     homepage: HomepageSelect<false> | HomepageSelect<true>;
+    paginas: PaginasSelect<false> | PaginasSelect<true>;
     'site-instellingen': SiteInstellingenSelect<false> | SiteInstellingenSelect<true>;
   };
   locale: null;
@@ -604,6 +606,43 @@ export interface Homepage {
   createdAt?: string | null;
 }
 /**
+ * De teksten van de pagina's Over ons en Taji. Opslaan is hier meteen zichtbaar op de site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "paginas".
+ */
+export interface Pagina {
+  id: number;
+  over?: {
+    /**
+     * Bijvoorbeeld "A new generation of creativity".
+     */
+    titel?: string | null;
+    /**
+     * Het verhaal onder de kop. Enter geeft een nieuwe alinea.
+     */
+    tekst?: string | null;
+  };
+  taji?: {
+    /**
+     * Bijvoorbeeld "The emotion creature".
+     */
+    eyebrow?: string | null;
+    titel?: string | null;
+    /**
+     * Enter geeft een nieuwe alinea.
+     */
+    tekst?: string | null;
+    /**
+     * Bijvoorbeeld "The full world of Taji is coming soon."
+     */
+    binnenkort?: string | null;
+    knopTekst?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * Het menu bovenaan, de footer en de social-links. Deze staan op elke pagina.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -720,6 +759,30 @@ export interface HomepageSelect<T extends boolean = true> {
   communityTekst?: T;
   communityKnopTekst?: T;
   _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "paginas_select".
+ */
+export interface PaginasSelect<T extends boolean = true> {
+  over?:
+    | T
+    | {
+        titel?: T;
+        tekst?: T;
+      };
+  taji?:
+    | T
+    | {
+        eyebrow?: T;
+        titel?: T;
+        tekst?: T;
+        binnenkort?: T;
+        knopTekst?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

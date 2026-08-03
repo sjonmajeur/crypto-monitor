@@ -57,6 +57,12 @@ afgesproken.
 
 | Upload bleef live falen; de logbijlagen kwamen niet mee en railway.com is vanuit deze omgeving onbereikbaar, dus de echte fout was onzichtbaar | Foutafhandeling eerst: de S3-fout gaat nu volledig naar de serverlogs en het paneel toont een Nederlandse melding; /api/opslag-test (alleen eigenaar) test de bucket los van het CMS. Meest waarschijnlijke oorzaak alvast verholpen: AWS-SDK ≥ 3.729 stuurt standaard CRC32-checksums die MinIO-achtige opslag weigert → requestChecksumCalculation/responseChecksumValidation op WHEN_REQUIRED | Open /api/opslag-test als eigenaar en stuur het antwoord door als het nog faalt |
 
+| Map "wetransfer_heade-r-pink-png" met een header-logo is niet meegekomen naar deze omgeving (nergens op de schijf te vinden) | Niets geraden: de header gebruikt nog `public/logo-taji.png`. Die PNG heeft géén transparantie (0 van 29.952 pixels), waardoor er een blokje om de mascotte staat op de zwarte header | Stuur het pink-header-bestand als bijlage in de chat, dan zet ik het op de juiste plek |
+| Beelden van de site stonden alleen als statische bestanden in de code | `payload/beeldenSeed.ts` uploadt alle tien de beelden als Media-items naar de bucket en koppelt ze aan de juiste velden. Idempotent: alleen lege velden worden gevuld, bestaande keuzes blijven staan | — |
+| Teksten van /about en /taji stonden nog hard in de code | Nieuw global "Overige pagina's" (`paginas`) met migratie; beide pagina's lezen nu uit het CMS met de oude tekst als terugval | — |
+| Migraties draaiden ook tijdens `next build`, waardoor parallelle buildworkers elkaar blokkeerden en de build afbrak | `prodMigrations` wordt overgeslagen als `NEXT_PHASE=phase-production-build`; migreren gebeurt alleen bij het opstarten | — |
+| Gravatar-avatar in het paneel gaf een kapot beeld (externe host onbereikbaar) | `admin.avatar: "default"` — geen externe aanroep meer | — |
+
 **Nooit verzonnen (bewust):** prijzen, voorraad, varianten en SKU's. Die
 komen uitsluitend uit Shopify; zonder keys faalt de weergave hard met een
 duidelijke melding in plaats van mock-data.

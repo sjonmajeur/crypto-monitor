@@ -90,6 +90,7 @@ export function onderdeelNaam(
   const namen: Record<string, string> = {
     homepage: "Homepage",
     "site-instellingen": "Footer & algemeen",
+    paginas: "Overige pagina's",
     artiesten: "Artiest",
     media: "Afbeelding",
     users: "Gebruiker",

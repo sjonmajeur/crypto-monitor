@@ -10,8 +10,10 @@ import {
 import { ARTISTS, type Artist } from "@/lib/artists";
 import {
   DEFAULT_HOMEPAGE,
+  DEFAULT_PAGINAS,
   DEFAULT_SITE_SETTINGS,
   type HomepageContent,
+  type PaginasContent,
   type SiteSettingsContent,
 } from "./defaults";
 
@@ -147,4 +149,27 @@ export async function getArtists(): Promise<Artist[]> {
       shopHref: `/shop?type=${slug}`,
     };
   });
+}
+
+export async function getPaginasContent(): Promise<PaginasContent> {
+  const doc = await getGlobal<Record<string, unknown>>("paginas");
+  const d = DEFAULT_PAGINAS;
+  if (!doc) return d;
+
+  const over = (doc.over ?? {}) as Record<string, unknown>;
+  const taji = (doc.taji ?? {}) as Record<string, unknown>;
+
+  return {
+    over: {
+      titel: text(over.titel, d.over.titel),
+      tekst: text(over.tekst, d.over.tekst),
+    },
+    taji: {
+      eyebrow: text(taji.eyebrow, d.taji.eyebrow),
+      titel: text(taji.titel, d.taji.titel),
+      tekst: text(taji.tekst, d.taji.tekst),
+      binnenkort: text(taji.binnenkort, d.taji.binnenkort),
+      knopTekst: text(taji.knopTekst, d.taji.knopTekst),
+    },
+  };
 }

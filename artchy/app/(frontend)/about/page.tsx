@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { getPaginasContent } from "@/lib/cms/content";
 
 export const metadata: Metadata = {
   title: "About",
@@ -13,21 +14,19 @@ export const metadata: Metadata = {
    publicatie meteen zichtbaar is. */
 export const dynamic = "force-dynamic";
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const { over } = await getPaginasContent();
+
   return (
     <>
       <SiteHeader />
       <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center gap-4 px-6 py-24">
-        <h1 className="text-heading text-snow">
-          A new generation of creativity
-        </h1>
-        <p className="max-w-prose text-sm leading-relaxed text-ash">
-          Artchy is built on a unique collaboration between generations. From
-          the raw imagination of young artist Josh, to the refined luxury
-          vision of designer Brass, we connect creativity, culture, and
-          identity through fashion. This is more than clothing. This is
-          wearable art.
-        </p>
+        <h1 className="text-heading text-snow">{over.titel}</h1>
+        {over.tekst.split(/\n+/).map((alinea) => (
+          <p key={alinea} className="max-w-prose text-sm leading-relaxed text-ash">
+            {alinea}
+          </p>
+        ))}
       </main>
       <SiteFooter />
     </>

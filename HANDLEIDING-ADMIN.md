@@ -185,7 +185,59 @@ bruikbaar als bewijs van wat er is gebeurd.
 
 ---
 
-## 9. Veelgestelde vragen
+## 9. Welk veld hoort bij welke plek op de site?
+
+Alles wat je in het paneel invult, komt op een vaste plek terecht. De
+site gebruikt pas ingebouwde reserveteksten als een veld écht leeg is.
+
+### Homepage (paneel → Homepage)
+
+| Veld in het paneel | Plek op de site |
+| --- | --- |
+| Aankondigingsbalk → alle drie de tekstvelden | De smalle balk helemaal bovenaan elke pagina |
+| Bovenkant → Gouden regel, Titelregels, Knop | De grote hero bovenaan de homepage (tekst en knop over de foto) |
+| Bovenkant → Foto / Foto (mobiel) | De grote herofoto op desktop en op telefoons |
+| Collecties → Titel + 3 kaarten (titel, tagline, link, foto) | Het blok "Chosen collections" met de drie kaarten Josh/Taji/Brass |
+| Stappen → Titel, Subtitel, 3 stappen | Het lichte blok "How art becomes fashion" |
+| Drop → alle velden + foto | Het blok met de hoodie en de afteltimer |
+| Drop → Einddatum | Waar de afteltimer naartoe telt |
+| Creators → Gouden regel, Titel | De kop boven de drie makers (de makers zelf komen uit Artiesten) |
+| Verhaal → Titel, Tekst, Foto | Het blok "A new generation of creativity" onderaan |
+| Nieuwsbrief → Kop, Regel, Knoptekst | Het donkere aanmeldblok helemaal onderaan de homepage |
+
+### Artiesten (paneel → Artiesten)
+
+| Veld | Plek |
+| --- | --- |
+| Naam, Subtitel, Korte omschrijving | De makerskaarten op de homepage én op /artists |
+| Biografie | Het pop-upvenster "Meer over …" op /artists |
+| Portretfoto | De foto op beide plekken |
+| Volgorde | Wie links/midden/rechts staat |
+
+### Overige pagina's (paneel → Overige pagina's)
+
+| Veld | Plek |
+| --- | --- |
+| Over ons → Kop, Tekst | De pagina /about |
+| Taji → alle velden | De pagina /taji |
+
+### Footer & algemeen (paneel → Footer & algemeen)
+
+| Veld | Plek |
+| --- | --- |
+| Menu-items | De navigatiebalk bovenaan elke pagina |
+| Merknaam, Regel, Korte zin | De linkerkolom van de footer |
+| Kolom "Menu" en kolom "Info" | De twee linkkolommen in de footer |
+| Copyright, Slogan | De onderste regel van de footer |
+| Social-links | De icoontjes in de footer |
+
+> **Publiceren is direct live.** Na een klik op *Publiceren* (of
+> *Opslaan* bij Overige pagina's) ververst de site de betrokken
+> pagina's automatisch — gewoon de pagina opnieuw laden is genoeg.
+
+---
+
+## 10. Veelgestelde vragen
 
 **Ik zie mijn wijziging niet op de website.**
 Heb je op *Publiceren* geklikt (en niet alleen op *Save draft*)? Ververs

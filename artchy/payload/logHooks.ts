@@ -5,6 +5,7 @@ import type {
 } from "payload";
 
 import { ipUitHeaders, logActiviteit, onderdeelNaam } from "./activiteitenlog";
+import { hervalideer } from "./hervalidatie";
 import { isEigenaar } from "./rechten";
 
 /**
@@ -58,6 +59,7 @@ export function logWijziging(
       verborgen: isEigenaar(gebruiker),
     });
 
+    await hervalideer(slug);
     return doc;
   };
 }
@@ -83,6 +85,7 @@ export function logVerwijdering(
       verborgen: isEigenaar(gebruiker),
     });
 
+    await hervalideer(slug);
     return doc;
   };
 }
@@ -106,6 +109,7 @@ export function logGlobalWijziging(slug: string): GlobalAfterChangeHook {
       verborgen: isEigenaar(gebruiker),
     });
 
+    await hervalideer(slug);
     return doc;
   };
 }

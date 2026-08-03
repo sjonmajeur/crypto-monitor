@@ -3,8 +3,10 @@ import type { Payload } from "payload";
 import {
   DEFAULT_ARTISTS,
   DEFAULT_HOMEPAGE,
+  DEFAULT_PAGINAS,
   DEFAULT_SITE_SETTINGS,
 } from "../lib/cms/defaults";
+import { seedBeelden } from "./beeldenSeed";
 
 /*
  * Bewust geen import uit lib/artists.ts of een JSON-bestand: die zijn
@@ -144,6 +146,21 @@ export async function seedIfEmpty(payload: Payload): Promise<void> {
       });
       payload.logger.info("[seed] Footer/algemeen gevuld.");
     }
+    const paginas = (await payload.findGlobal({ slug: "paginas" })) as {
+      over?: { titel?: string };
+    };
+    if (!paginas?.over?.titel) {
+      await payload.updateGlobal({
+        slug: "paginas",
+        data: DEFAULT_PAGINAS,
+        overrideAccess: true,
+      });
+      payload.logger.info("[seed] Overige pagina's gevuld.");
+    }
+
+    // Beelden altijd controleren: dit vult ook een bestaande
+    // installatie aan waar de tekst al staat maar de beelden nog niet.
+    await seedBeelden(payload);
   } catch (error) {
     payload.logger.error({ err: error }, "[seed] Vullen van het CMS mislukt");
   }

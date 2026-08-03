@@ -12,6 +12,7 @@ import { LoginLog } from "./payload/collections/LoginLog";
 import { Media } from "./payload/collections/Media";
 import { Users } from "./payload/collections/Users";
 import { Homepage } from "./payload/globals/Homepage";
+import { Paginas } from "./payload/globals/Paginas";
 import { SiteSettings } from "./payload/globals/SiteSettings";
 import { ipUitHeaders, logActiviteit } from "./payload/activiteitenlog";
 import { nederlandsePayloadTaal, nederlandseVertalingen } from "./payload/i18n";
@@ -44,7 +45,22 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     meta: {
+      // Overal ARTCHY in beeld, nergens Payload.
       titleSuffix: " — ARTCHY beheer",
+      description: "Beheerpaneel van ARTCHY.",
+      icons: [
+        { rel: "icon", type: "image/png", url: "/logo-taji.png" },
+      ],
+    },
+    // Geen gravatar: dat haalt een plaatje van een externe server en
+    // levert een kapot beeld op zodra die niet bereikbaar is.
+    avatar: "default",
+    components: {
+      graphics: {
+        Logo: "@/payload/components/Merk#Logo",
+        Icon: "@/payload/components/Merk#Icoon",
+      },
+      afterLogin: ["@/payload/components/AanmeldLink#AanmeldLink"],
     },
   },
   // Adminpaneel volledig in het Nederlands, zonder dat een beheerder
@@ -55,7 +71,7 @@ export default buildConfig({
     translations: nederlandseVertalingen,
   },
   collections: [Users, Media, Artists, LoginLog],
-  globals: [Homepage, SiteSettings],
+  globals: [Homepage, Paginas, SiteSettings],
   editor: lexicalEditor(),
   // Zonder DATABASE_URI (bijv. tijdens een lokale build) start Payload
   // niet, maar de site valt terug op de ingebouwde standaardteksten.
@@ -66,7 +82,11 @@ export default buildConfig({
     // komt elke schemawijziging vanzelf op een bestaande database
     // terecht, zonder dataverlies.
     push: true,
-    prodMigrations: migraties,
+    // Migraties draaien bij het OPSTARTEN, nooit tijdens `next build`:
+    // de build draait met meerdere parallelle workers die anders
+    // tegelijk zouden migreren en elkaar blokkeren.
+    prodMigrations:
+      process.env.NEXT_PHASE === "phase-production-build" ? undefined : migraties,
     migrationDir: "./payload/migraties",
   }),
   plugins: [

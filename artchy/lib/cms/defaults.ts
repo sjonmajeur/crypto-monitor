@@ -182,3 +182,21 @@ export const DEFAULT_ARTISTS = [
     foto: "creator-brass.jpg",
   },
 ];
+
+export const DEFAULT_PAGINAS = {
+  over: {
+    titel: "A new generation of creativity",
+    tekst:
+      "Artchy is built on a unique collaboration between generations. From the raw imagination of young artist Josh, to the refined luxury vision of designer Brass, we connect creativity, culture, and identity through fashion. This is more than clothing. This is wearable art.",
+  },
+  taji: {
+    eyebrow: "The emotion creature",
+    titel: "Taji",
+    tekst:
+      "Born from imagination. Powered by emotion. Wear your feelings — that's TAJI.",
+    binnenkort: "The full world of Taji is coming soon.",
+    knopTekst: "Shop the Taji collection",
+  },
+};
+
+export type PaginasContent = typeof DEFAULT_PAGINAS;
