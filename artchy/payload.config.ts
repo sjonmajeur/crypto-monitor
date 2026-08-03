@@ -21,6 +21,7 @@ import {
   bucketNaam,
   bucketRegio,
 } from "./payload/opslag";
+import { migraties } from "./payload/migraties";
 import { seedIfEmpty } from "./payload/seed";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -57,8 +58,13 @@ export default buildConfig({
   // niet, maar de site valt terug op de ingebouwde standaardteksten.
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URI ?? "" },
-    // Schema wordt automatisch bijgewerkt; geen handmatige migraties nodig.
+    // Lokaal (dev) wordt het schema live gesynchroniseerd (push); in
+    // productie draaien bij het opstarten de migraties hieronder. Zo
+    // komt elke schemawijziging vanzelf op een bestaande database
+    // terecht, zonder dataverlies.
     push: true,
+    prodMigrations: migraties,
+    migrationDir: "./payload/migraties",
   }),
   plugins: [
     s3Storage({

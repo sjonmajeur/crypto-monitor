@@ -53,6 +53,8 @@ afgesproken.
 | Exacte vorm van `BUCKET_ENDPOINT` bij Railway Object Storage niet te verifiëren (netwerkpolicy blokkeert railway.com) | De waarde wordt genormaliseerd: `https://` wordt toegevoegd als het ontbreekt, een slash op het eind en een meegekopieerde bucketnaam worden verwijderd. `forcePathStyle` blijft aan (MinIO-achtige opslag) | Plak de bucket-variabelen uit Railway; dan controleer ik de exacte vorm |
 | Afzenderadres voor e-mail niet opgegeven | `RESEND_FROM_ADDRESS`, met terugval `beheer@artchy.nl`; zonder `RESEND_API_KEY` gaan er geen mails uit en blijft de rest werken | Kies het definitieve afzenderadres en verifieer het domein bij Resend |
 
+| Live bleek de database al te bestaan; de schema.sql-aanpak draaide alleen op een lege database en liet /admin crashen op de nieuwe kolommen | Vervangen door echte migraties (`payload/migraties/`, `prodMigrations`): bij het opstarten in productie draait Payload automatisch wat nog niet is geweest. Bestaande gebruikers worden op "goedgekeurd" gezet en de oudste gebruiker wordt eigenaar; oude logregels krijgen met terugwerkende kracht een actie en eigenaarsregels worden verborgen | Controleer na de deploy of jouw account inderdaad de eigenaar is geworden |
+
 **Nooit verzonnen (bewust):** prijzen, voorraad, varianten en SKU's. Die
 komen uitsluitend uit Shopify; zonder keys faalt de weergave hard met een
 duidelijke melding in plaats van mock-data.

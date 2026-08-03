@@ -1,3 +1,12 @@
+import { type MigrateDownArgs, type MigrateUpArgs, sql } from "@payloadcms/db-postgres";
+
+/**
+ * Basisschema zoals het was vóór het goedkeurings- en logboekwerk
+ * (stand van PR #3). Draait alleen iets op een lege database; bestaat
+ * de users-tabel al, dan is deze migratie een no-op. Zo werkt hij
+ * zowel op een verse database als op een bestaande productiedatabase.
+ */
+const BASIS_SCHEMA = `
 --
 -- PostgreSQL database dump
 --
@@ -11,11 +20,17 @@ SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
 
 --
 -- Name: enum__artiesten_v_version_status; Type: TYPE; Schema: public; Owner: -
@@ -68,26 +83,6 @@ CREATE TYPE public.enum_homepage_status AS ENUM (
 
 
 --
--- Name: enum_inloggeschiedenis_actie; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.enum_inloggeschiedenis_actie AS ENUM (
-    'ingelogd',
-    'uitgelogd',
-    'inloggen-mislukt',
-    'aangemaakt',
-    'gewijzigd',
-    'verwijderd',
-    'gepubliceerd',
-    'aanmelding-ontvangen',
-    'goedgekeurd',
-    'geweigerd',
-    'geblokkeerd',
-    'rol-gewijzigd'
-);
-
-
---
 -- Name: enum_inloggeschiedenis_resultaat; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -112,21 +107,8 @@ CREATE TYPE public.enum_site_instellingen_status AS ENUM (
 --
 
 CREATE TYPE public.enum_users_rol AS ENUM (
-    'eigenaar',
     'beheerder',
     'redacteur'
-);
-
-
---
--- Name: enum_users_status; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.enum_users_status AS ENUM (
-    'in-afwachting',
-    'goedgekeurd',
-    'geweigerd',
-    'geblokkeerd'
 );
 
 
@@ -629,15 +611,10 @@ CREATE TABLE public.homepage_stappen (
 
 CREATE TABLE public.inloggeschiedenis (
     id integer NOT NULL,
-    tijdstip timestamp(3) with time zone,
-    naam character varying,
-    email character varying,
-    actie public.enum_inloggeschiedenis_actie,
-    onderdeel character varying,
-    details character varying,
-    ip_adres character varying,
     gebruiker_id integer,
-    verborgen boolean DEFAULT false,
+    email character varying,
+    tijdstip timestamp(3) with time zone,
+    ip_adres character varying,
     resultaat public.enum_inloggeschiedenis_resultaat,
     updated_at timestamp(3) with time zone DEFAULT now() NOT NULL,
     created_at timestamp(3) with time zone DEFAULT now() NOT NULL
@@ -989,7 +966,6 @@ CREATE TABLE public.site_instellingen_menu (
 CREATE TABLE public.users (
     id integer NOT NULL,
     naam character varying NOT NULL,
-    status public.enum_users_status DEFAULT 'in-afwachting'::public.enum_users_status NOT NULL,
     rol public.enum_users_rol DEFAULT 'redacteur'::public.enum_users_rol NOT NULL,
     updated_at timestamp(3) with time zone DEFAULT now() NOT NULL,
     created_at timestamp(3) with time zone DEFAULT now() NOT NULL,
@@ -1765,24 +1741,10 @@ CREATE INDEX homepage_verhaal_afbeelding_idx ON public.homepage USING btree (ver
 
 
 --
--- Name: inloggeschiedenis_actie_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX inloggeschiedenis_actie_idx ON public.inloggeschiedenis USING btree (actie);
-
-
---
 -- Name: inloggeschiedenis_created_at_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX inloggeschiedenis_created_at_idx ON public.inloggeschiedenis USING btree (created_at);
-
-
---
--- Name: inloggeschiedenis_email_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX inloggeschiedenis_email_idx ON public.inloggeschiedenis USING btree (email);
 
 
 --
@@ -1793,38 +1755,10 @@ CREATE INDEX inloggeschiedenis_gebruiker_idx ON public.inloggeschiedenis USING b
 
 
 --
--- Name: inloggeschiedenis_naam_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX inloggeschiedenis_naam_idx ON public.inloggeschiedenis USING btree (naam);
-
-
---
--- Name: inloggeschiedenis_onderdeel_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX inloggeschiedenis_onderdeel_idx ON public.inloggeschiedenis USING btree (onderdeel);
-
-
---
--- Name: inloggeschiedenis_tijdstip_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX inloggeschiedenis_tijdstip_idx ON public.inloggeschiedenis USING btree (tijdstip);
-
-
---
 -- Name: inloggeschiedenis_updated_at_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX inloggeschiedenis_updated_at_idx ON public.inloggeschiedenis USING btree (updated_at);
-
-
---
--- Name: inloggeschiedenis_verborgen_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX inloggeschiedenis_verborgen_idx ON public.inloggeschiedenis USING btree (verborgen);
 
 
 --
@@ -2349,3 +2283,20 @@ ALTER TABLE ONLY public.users_sessions
 --
 
 
+`;
+
+export async function up({ db }: MigrateUpArgs): Promise<void> {
+  const bestaat = await db.execute(
+    sql`select to_regclass('public.users') is not null as aanwezig`,
+  );
+  const rij = (bestaat as { rows?: { aanwezig?: boolean }[] }).rows?.[0];
+  if (rij?.aanwezig) return;
+
+  await db.execute(sql.raw(BASIS_SCHEMA));
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function down(_args: MigrateDownArgs): Promise<void> {
+  // Bewust leeg: het basisschema terugdraaien zou de hele database
+  // weggooien.
+}

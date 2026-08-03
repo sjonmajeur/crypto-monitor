@@ -89,7 +89,7 @@ en een bericht aan die persoon zodra je hem goedkeurt of weigert. Daar is
 2. Wacht tot de deploy groen is (± 3 minuten).
 
 Bij deze eerste start gebeurt er automatisch twee dingen: de database
-krijgt de juiste tabellen (uit `artchy/payload/schema.sql`), en het CMS
+krijgt de juiste tabellen (via automatische migraties), en het CMS
 wordt gevuld met de teksten die nu op de site staan (inclusief Josh,
 Taji en Brass). Je begint dus niet met een leeg paneel.
 
@@ -156,23 +156,30 @@ een andere beheerder je wachtwoord opnieuw instellen via **Gebruikers**.
 
 ## Voor de ontwikkelaar: schema bijwerken
 
-De tabellen worden bij een lege database aangemaakt uit
-`artchy/payload/schema.sql`. Payload werkt het schema namelijk alleen
-automatisch bij buiten productie.
+Databasewijzigingen gaan via migraties in `artchy/payload/migraties/`.
+Bij het opstarten in productie draait Payload automatisch alle migraties
+die nog niet zijn geweest (bijgehouden in de tabel `payload_migrations`).
+Een bestaande database wordt dus bijgewerkt zonder dataverlies; een lege
+database wordt volledig opgebouwd. Lokaal (dev) hoeft dit niet: daar
+synchroniseert Payload het schema live.
 
-Voeg je later velden toe aan een collectie of global, genereer dit
-bestand dan opnieuw:
+Voeg je later velden toe aan een collectie of global, maak dan een
+nieuwe migratie:
 
 ```bash
 cd artchy
-# 1. draai de dev-server één keer tegen een (test)database:
-DATABASE_URI=postgresql://... PAYLOAD_SECRET=... npm run dev
-# 2. dump het bijgewerkte schema:
-pg_dump "$DATABASE_URI" --schema-only --no-owner --no-privileges \
-  --no-comments | grep -v '^\\restrict\|^\\unrestrict' \
-  > payload/schema.sql
+# 1. genereer een migratiebestand met de verschillen:
+DATABASE_URI=postgresql://... PAYLOAD_SECRET=... \
+  npx payload migrate:create naam-van-de-wijziging
+# 2. zet het nieuwe bestand onderaan de lijst in payload/migraties/index.ts
+# 3. schrijf de SQL idempotent (IF NOT EXISTS), dan kan opnieuw draaien
+#    nooit kwaad
 ```
 
-Bij een bestaande productiedatabase moeten nieuwe kolommen daarna
-handmatig worden toegevoegd (`ALTER TABLE ...`), of laat Payload dat
-doen door de dev-server één keer tegen die database te draaien.
+Twee dingen om te weten:
+
+- Elke migratie draait in zijn eigen transactie. Een enum-waarde die je
+  in migratie A toevoegt, kun je pas in migratie B gebruiken (beperking
+  van Postgres).
+- Draai nooit `payload migrate:fresh` op productie: die gooit alle
+  tabellen weg.
