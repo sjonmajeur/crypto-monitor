@@ -18,13 +18,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
---
-
--- *not* creating schema, since initdb creates it
-
-
---
 -- Name: enum__artiesten_v_version_status; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -75,6 +68,26 @@ CREATE TYPE public.enum_homepage_status AS ENUM (
 
 
 --
+-- Name: enum_inloggeschiedenis_actie; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.enum_inloggeschiedenis_actie AS ENUM (
+    'ingelogd',
+    'uitgelogd',
+    'inloggen-mislukt',
+    'aangemaakt',
+    'gewijzigd',
+    'verwijderd',
+    'gepubliceerd',
+    'aanmelding-ontvangen',
+    'goedgekeurd',
+    'geweigerd',
+    'geblokkeerd',
+    'rol-gewijzigd'
+);
+
+
+--
 -- Name: enum_inloggeschiedenis_resultaat; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -99,8 +112,21 @@ CREATE TYPE public.enum_site_instellingen_status AS ENUM (
 --
 
 CREATE TYPE public.enum_users_rol AS ENUM (
+    'eigenaar',
     'beheerder',
     'redacteur'
+);
+
+
+--
+-- Name: enum_users_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.enum_users_status AS ENUM (
+    'in-afwachting',
+    'goedgekeurd',
+    'geweigerd',
+    'geblokkeerd'
 );
 
 
@@ -603,10 +629,15 @@ CREATE TABLE public.homepage_stappen (
 
 CREATE TABLE public.inloggeschiedenis (
     id integer NOT NULL,
-    gebruiker_id integer,
-    email character varying,
     tijdstip timestamp(3) with time zone,
+    naam character varying,
+    email character varying,
+    actie public.enum_inloggeschiedenis_actie,
+    onderdeel character varying,
+    details character varying,
     ip_adres character varying,
+    gebruiker_id integer,
+    verborgen boolean DEFAULT false,
     resultaat public.enum_inloggeschiedenis_resultaat,
     updated_at timestamp(3) with time zone DEFAULT now() NOT NULL,
     created_at timestamp(3) with time zone DEFAULT now() NOT NULL
@@ -958,6 +989,7 @@ CREATE TABLE public.site_instellingen_menu (
 CREATE TABLE public.users (
     id integer NOT NULL,
     naam character varying NOT NULL,
+    status public.enum_users_status DEFAULT 'in-afwachting'::public.enum_users_status NOT NULL,
     rol public.enum_users_rol DEFAULT 'redacteur'::public.enum_users_rol NOT NULL,
     updated_at timestamp(3) with time zone DEFAULT now() NOT NULL,
     created_at timestamp(3) with time zone DEFAULT now() NOT NULL,
@@ -1733,10 +1765,24 @@ CREATE INDEX homepage_verhaal_afbeelding_idx ON public.homepage USING btree (ver
 
 
 --
+-- Name: inloggeschiedenis_actie_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX inloggeschiedenis_actie_idx ON public.inloggeschiedenis USING btree (actie);
+
+
+--
 -- Name: inloggeschiedenis_created_at_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX inloggeschiedenis_created_at_idx ON public.inloggeschiedenis USING btree (created_at);
+
+
+--
+-- Name: inloggeschiedenis_email_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX inloggeschiedenis_email_idx ON public.inloggeschiedenis USING btree (email);
 
 
 --
@@ -1747,10 +1793,38 @@ CREATE INDEX inloggeschiedenis_gebruiker_idx ON public.inloggeschiedenis USING b
 
 
 --
+-- Name: inloggeschiedenis_naam_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX inloggeschiedenis_naam_idx ON public.inloggeschiedenis USING btree (naam);
+
+
+--
+-- Name: inloggeschiedenis_onderdeel_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX inloggeschiedenis_onderdeel_idx ON public.inloggeschiedenis USING btree (onderdeel);
+
+
+--
+-- Name: inloggeschiedenis_tijdstip_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX inloggeschiedenis_tijdstip_idx ON public.inloggeschiedenis USING btree (tijdstip);
+
+
+--
 -- Name: inloggeschiedenis_updated_at_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX inloggeschiedenis_updated_at_idx ON public.inloggeschiedenis USING btree (updated_at);
+
+
+--
+-- Name: inloggeschiedenis_verborgen_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX inloggeschiedenis_verborgen_idx ON public.inloggeschiedenis USING btree (verborgen);
 
 
 --

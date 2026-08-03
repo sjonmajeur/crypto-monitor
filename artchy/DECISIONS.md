@@ -46,6 +46,13 @@ afgesproken.
 | Catalogusgrootte onbekend | PLP haalt max. 100 producten in één call en filtert/sorteert server-side (passend bij ambachtelijk aanbod); URL-searchParams dragen de filterstaat | Werkelijk aantal producten in de store; boven ~100 bouw ik paginering + Storefront-side filtering |
 | Filterbalk-ontwerp ontbreekt (geen Figma) | Sobere balk boven het grid: toggle-knoppen per glastype en inhoud (aria-pressed), select voor sorteren, resultaat-teller met aria-live | Figma-frame van de PLP |
 
+| Zichtbaarheid van de eigenaar niet gespecificeerd, later aangescherpt: naam mag nergens opduiken | Eigenaarsaccounts zijn uitgefilterd in de leesregels van *Gebruikers* én van het logboek (`verborgen`-vlag). De eerste beheerder ziet zichzelf als hoogste rol; de optie "Eigenaar" bestaat in zijn keuzelijst niet | Bevestig of de eigenaar ook onzichtbaar moet blijven in toekomstige exports/rapportages |
+| Wie mag aanmeldingen goedkeuren? Eerst "alleen de eigenaar", daarna "de beheerder moet echte rechten hebben" | Beheerders keuren goed, weigeren en blokkeren. Alleen een eigenaar kan de eigenaarsrol toekennen/intrekken en een eigenaar wijzigen of verwijderen; de laatste eigenaar kan nooit weg | Bevestig dat een beheerder inderdaad zelfstandig mag goedkeuren |
+| Adres van de privé-inlogpagina van de eigenaar niet opgegeven | `/aanmelden` is publiek; `/eigenaar` is de privé-ingang: nergens gelinkt, `noindex`, en alleen een goedgekeurde eigenaar komt erdoor. Mislukte pogingen daar zijn alleen voor de eigenaar zichtbaar | Geef een ander pad door als je een minder voor de hand liggend adres wilt |
+| Regio van de Railway-bucket onbekend | Default `us-east-1` in plaats van `auto` — `auto` bestaat alleen bij Cloudflare R2 en laat de SDK naar `s3.auto.amazonaws.com` zoeken | Vul `BUCKET_REGION` met de regio uit de bucket-variabelen van Railway |
+| Exacte vorm van `BUCKET_ENDPOINT` bij Railway Object Storage niet te verifiëren (netwerkpolicy blokkeert railway.com) | De waarde wordt genormaliseerd: `https://` wordt toegevoegd als het ontbreekt, een slash op het eind en een meegekopieerde bucketnaam worden verwijderd. `forcePathStyle` blijft aan (MinIO-achtige opslag) | Plak de bucket-variabelen uit Railway; dan controleer ik de exacte vorm |
+| Afzenderadres voor e-mail niet opgegeven | `RESEND_FROM_ADDRESS`, met terugval `beheer@artchy.nl`; zonder `RESEND_API_KEY` gaan er geen mails uit en blijft de rest werken | Kies het definitieve afzenderadres en verifieer het domein bij Resend |
+
 **Nooit verzonnen (bewust):** prijzen, voorraad, varianten en SKU's. Die
 komen uitsluitend uit Shopify; zonder keys faalt de weergave hard met een
 duidelijke melding in plaats van mock-data.

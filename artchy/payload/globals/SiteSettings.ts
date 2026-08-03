@@ -1,5 +1,8 @@
 import type { GlobalConfig } from "payload";
 
+import { logGlobalWijziging } from "../logHooks";
+import { isActief } from "../rechten";
+
 /**
  * Menu, footer en socials — alles wat op elke pagina staat.
  */
@@ -15,7 +18,10 @@ export const SiteSettings: GlobalConfig = {
   },
   access: {
     read: () => true,
-    update: ({ req }) => Boolean(req.user),
+    update: ({ req }) => isActief(req.user),
+  },
+  hooks: {
+    afterChange: [logGlobalWijziging("site-instellingen")],
   },
   versions: { drafts: true, max: 20 },
   fields: [

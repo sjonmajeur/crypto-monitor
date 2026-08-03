@@ -1,5 +1,8 @@
 import type { CollectionConfig } from "payload";
 
+import { logVerwijdering, logWijziging } from "../logHooks";
+import { isActief } from "../rechten";
+
 /**
  * Alle afbeeldingen. Opslag gaat naar de Railway-bucket (S3-compatible)
  * via @payloadcms/storage-s3 — niet naar de lokale schijf, die na elke
@@ -17,9 +20,13 @@ export const Media: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: ({ req }) => Boolean(req.user),
-    update: ({ req }) => Boolean(req.user),
-    delete: ({ req }) => Boolean(req.user),
+    create: ({ req }) => isActief(req.user),
+    update: ({ req }) => isActief(req.user),
+    delete: ({ req }) => isActief(req.user),
+  },
+  hooks: {
+    afterChange: [logWijziging("media", "filename")],
+    afterDelete: [logVerwijdering("media", "filename")],
   },
   upload: {
     mimeTypes: ["image/*"],

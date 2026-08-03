@@ -1,5 +1,8 @@
 import type { GlobalConfig } from "payload";
 
+import { logGlobalWijziging } from "../logHooks";
+import { isActief } from "../rechten";
+
 const beeldHint = (formaat: string) =>
   `Aanbevolen formaat: ${formaat}. Laat leeg om de huidige foto van de site te blijven gebruiken.`;
 
@@ -19,7 +22,10 @@ export const Homepage: GlobalConfig = {
   },
   access: {
     read: () => true,
-    update: ({ req }) => Boolean(req.user),
+    update: ({ req }) => isActief(req.user),
+  },
+  hooks: {
+    afterChange: [logGlobalWijziging("homepage")],
   },
   versions: { drafts: true, max: 20 },
   fields: [
