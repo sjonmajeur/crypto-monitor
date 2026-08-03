@@ -1,5 +1,8 @@
 import type { CollectionConfig } from "payload";
 
+import { logVerwijdering, logWijziging } from "../logHooks";
+import { isActief } from "../rechten";
+
 /**
  * De artiesten (Josh, Taji, Brass). Wordt gebruikt op de homepage,
  * /artists en in de bio-popups.
@@ -18,9 +21,15 @@ export const Artists: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: ({ req }) => Boolean(req.user),
-    update: ({ req }) => Boolean(req.user),
-    delete: ({ req }) => Boolean(req.user),
+    // Alleen goedgekeurde gebruikers mogen schrijven. Wie nog in
+    // afwachting is, kan hier niets — ook niet via de API.
+    create: ({ req }) => isActief(req.user),
+    update: ({ req }) => isActief(req.user),
+    delete: ({ req }) => isActief(req.user),
+  },
+  hooks: {
+    afterChange: [logWijziging("artiesten", "naam")],
+    afterDelete: [logVerwijdering("artiesten", "naam")],
   },
   versions: { drafts: true, maxPerDoc: 20 },
   defaultSort: "volgorde",

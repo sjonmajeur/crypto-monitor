@@ -33,11 +33,19 @@ kun je alles vanuit de browser beheren. Reken op ongeveer 15 minuten.
 | --- | --- |
 | `DATABASE_URI` | De `DATABASE_URL` van je Postgres-service (kopieer die uit stap 1) |
 | `PAYLOAD_SECRET` | Een lange willekeurige tekst, bijv. `k7Qw2xVn8pLm4RtZ9cBd3sYh6uJf1aEg` — verzin er zelf een van 30+ tekens |
-| `BUCKET_NAME` | Uit de bucket-variabelen (stap 2) |
+| `BUCKET_NAME` | De naam van de bucket, bijv. `artchy-media`. **Alleen de naam**, geen adres |
 | `BUCKET_ACCESS_KEY_ID` | Uit de bucket-variabelen |
 | `BUCKET_SECRET_ACCESS_KEY` | Uit de bucket-variabelen |
-| `BUCKET_ENDPOINT` | Uit de bucket-variabelen (begint met `https://`) |
-| `BUCKET_PUBLIC_HOSTNAME` | Het adres van je bucket zónder `https://`, bijv. `bucket-production-1234.up.railway.app` |
+| `BUCKET_ENDPOINT` | Het adres van de bucket **mét** `https://` en **zonder** de bucketnaam erachter, bijv. `https://bucket-production-1234.up.railway.app` |
+| `BUCKET_REGION` | De regio uit de bucket-variabelen (Railway noemt die `REGION` of `AWS_REGION`), bijv. `us-west-1` |
+| `BUCKET_PUBLIC_HOSTNAME` | Optioneel. Hetzelfde adres als `BUCKET_ENDPOINT` maar zónder `https://`. Laat je hem leeg, dan leidt de site hem zelf af |
+
+> **Belangrijk bij `BUCKET_ENDPOINT`:** zonder `https://` ervoor mislukt
+> elke upload met de melding *"Something went wrong."*, omdat de
+> opslagsoftware er geen geldig adres van kan maken. Staat de bucketnaam
+> er wél achter, dan komt die naam twee keer in het adres en zijn de
+> foto's na het uploaden niet zichtbaar. De site corrigeert beide
+> vormen tegenwoordig zelf, maar vul hem het liefst meteen goed in.
 
 > **Tip:** Railway kan variabelen automatisch koppelen. Typ in het
 > waardeveld `${{` en kies dan de Postgres- of bucket-service uit de
@@ -46,6 +54,34 @@ kun je alles vanuit de browser beheren. Reken op ongeveer 15 minuten.
 4. Controleer dat deze er ook staan (van eerdere stappen):
    `NEXT_PUBLIC_SANDBOX`, `SHOPIFY_STORE_DOMAIN`,
    `SHOPIFY_STOREFRONT_ACCESS_TOKEN`.
+
+## Stap 3b — E-mail aanzetten (Resend)
+
+Het paneel stuurt zelf e-mails: een melding als iemand toegang aanvraagt,
+en een bericht aan die persoon zodra je hem goedkeurt of weigert. Daar is
+één gratis account voor nodig.
+
+1. Ga naar **resend.com** en maak een account aan (gratis plan volstaat).
+2. Klik links op **API Keys** → **Create API Key**. Geef hem een naam
+   (bijv. `ARTCHY`), rechten **Sending access**, en klik op **Add**.
+3. Kopieer de sleutel die verschijnt (begint met `re_`). Je ziet hem maar
+   één keer.
+4. Zet in Railway bij je website-service deze variabelen:
+
+| Naam | Waarde |
+| --- | --- |
+| `RESEND_API_KEY` | De sleutel die je net kopieerde (`re_...`) |
+| `RESEND_FROM_ADDRESS` | Het afzenderadres, bijv. `beheer@artchy.nl` |
+| `RESEND_FROM_NAME` | De afzendernaam, bijv. `ARTCHY` |
+
+5. Wil je vanaf je eigen domein versturen? Klik in Resend op **Domains**
+   → **Add Domain**, vul `artchy.nl` in en zet de DNS-regels die Resend
+   toont bij je domeinprovider. Zolang dat niet is gedaan, gebruik je als
+   `RESEND_FROM_ADDRESS` het testadres `onboarding@resend.dev`.
+
+> Vul je `RESEND_API_KEY` niet in, dan blijft het paneel gewoon werken:
+> er gaan alleen geen e-mails uit. Je ziet nieuwe aanmeldingen dan zelf
+> bij **Gebruikers**.
 
 ## Stap 4 — Deployen
 
@@ -63,10 +99,11 @@ Taji en Brass). Je begint dus niet met een leeg paneel.
 2. Je krijgt automatisch het scherm **Create first user**.
 3. Vul je naam, e-mailadres en een sterk wachtwoord in en klik op
    **Create**.
-4. Je bent meteen ingelogd. Dit eerste account is de **beheerder**.
+4. Je bent meteen ingelogd. Dit eerste account krijgt automatisch de
+   hoogste rol en staat meteen op *Goedgekeurd*.
 
-> Dit scherm verschijnt maar één keer. Daarna maak je extra gebruikers
-> aan via **Gebruikers** in het menu.
+> Dit scherm verschijnt maar één keer. Daarna melden nieuwe mensen zich
+> zelf aan via **/aanmelden** en keur jij ze goed bij **Gebruikers**.
 
 ## Stap 6 — Controleren
 
@@ -91,8 +128,24 @@ De bucket-variabelen ontbreken; uploads gaan dan naar de container, die
 bij elke deploy leeg wordt. Controleer stap 2 en 3.
 
 **Foto's laden niet op de website (leeg vlak)**
-`BUCKET_PUBLIC_HOSTNAME` ontbreekt of klopt niet. Vul het hostname in
-zonder `https://` en redeploy.
+`BUCKET_PUBLIC_HOSTNAME` klopt niet. Laat hem leeg (dan wordt hij
+afgeleid uit `BUCKET_ENDPOINT`) of vul exact dezelfde host in, zonder
+`https://`. Daarna redeployen.
+
+**Uploaden mislukt met "Something went wrong."**
+Bijna altijd `BUCKET_ENDPOINT`. Controleer op deze volgorde:
+
+1. Begint de waarde met `https://`? Zo niet, zet het ervoor.
+2. Staat de bucketnaam achter het adres (`.../artchy-media`)? Haal dat
+   stuk weg — dat hoort in `BUCKET_NAME`.
+3. Staat er een `/` op het eind? Haal die weg.
+4. Is `BUCKET_REGION` gevuld met de regio uit de bucket-variabelen?
+5. Kloppen `BUCKET_ACCESS_KEY_ID` en `BUCKET_SECRET_ACCESS_KEY`?
+
+Redeploy daarna. In de logs van de website-service staat bij het starten
+één regel die vertelt wat de app gebruikt:
+`Media-opslag: https://... /... (regio ...)`. Staat er in plaats daarvan
+*"Bucket niet volledig ingesteld"*, dan mist er nog een variabele.
 
 **Ik kan niet inloggen**
 Gebruik **Forgot password** op de loginpagina. Werkt dat niet, dan kan

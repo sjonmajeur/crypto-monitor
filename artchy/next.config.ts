@@ -4,6 +4,8 @@ import { fileURLToPath } from "node:url";
 import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
 
+import { bucketHostnaam } from "./payload/opslag";
+
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
@@ -24,14 +26,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "cdn.shopify.com",
       },
-      // Media uit de Railway-bucket (S3-compatible endpoint).
-      ...(process.env.BUCKET_PUBLIC_HOSTNAME
-        ? [
-            {
-              protocol: "https" as const,
-              hostname: process.env.BUCKET_PUBLIC_HOSTNAME,
-            },
-          ]
+      /*
+       * Media uit de Railway-bucket. De hostnaam wordt afgeleid uit
+       * BUCKET_ENDPOINT wanneer BUCKET_PUBLIC_HOSTNAME ontbreekt of
+       * afwijkt: de plugin linkt namelijk altijd naar het endpoint, dus
+       * dat is per definitie de juiste host.
+       */
+      ...(bucketHostnaam()
+        ? [{ protocol: "https" as const, hostname: bucketHostnaam() as string }]
         : []),
       { protocol: "https" as const, hostname: "**.railway.app" },
       { protocol: "https" as const, hostname: "**.storage.railway.app" },
