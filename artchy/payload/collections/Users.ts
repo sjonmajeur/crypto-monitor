@@ -18,6 +18,8 @@ export const Users: CollectionConfig = {
   labels: { singular: "Gebruiker", plural: "Gebruikers" },
   auth: true,
   admin: {
+    // Technische API-tab verbergen: beheerders hebben er niets aan.
+    hideAPIURL: true,
     useAsTitle: "email",
     defaultColumns: ["naam", "email", "rol"],
     group: "Beheer",

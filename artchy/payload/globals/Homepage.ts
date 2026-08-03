@@ -11,6 +11,8 @@ export const Homepage: GlobalConfig = {
   slug: "homepage",
   label: "Homepage",
   admin: {
+    // Technische API-tab verbergen: beheerders hebben er niets aan.
+    hideAPIURL: true,
     group: "Inhoud",
     description:
       "Alles wat op de voorpagina staat. Wijzigingen zijn pas zichtbaar op de site nadat je op Publiceren klikt.",
@@ -87,7 +89,7 @@ export const Homepage: GlobalConfig = {
                 {
                   name: "knopLink",
                   type: "text",
-                  label: "Link van de knop",
+                  label: "Adres van de knop",
                   admin: { description: 'Bijvoorbeeld "/shop".' },
                 },
                 {
@@ -131,13 +133,13 @@ export const Homepage: GlobalConfig = {
                 {
                   name: "tagline",
                   type: "textarea",
-                  label: "Tagline",
+                  label: "Korte omschrijving",
                   admin: { description: "Twee tot drie korte regels." },
                 },
                 {
                   name: "link",
                   type: "text",
-                  label: "Link",
+                  label: "Adres (link)",
                   admin: { description: 'Bijvoorbeeld "/shop?type=josh".' },
                 },
                 {
@@ -188,7 +190,7 @@ export const Homepage: GlobalConfig = {
               },
             },
             { name: "dropKnopTekst", type: "text", label: "Tekst op de knop" },
-            { name: "dropKnopLink", type: "text", label: "Link van de knop" },
+            { name: "dropKnopLink", type: "text", label: "Adres van de knop" },
             {
               name: "dropAfbeelding",
               type: "upload",

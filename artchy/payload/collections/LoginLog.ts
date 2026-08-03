@@ -16,6 +16,8 @@ export const LoginLog: CollectionConfig = {
   slug: "inloggeschiedenis",
   labels: { singular: "Inlogpoging", plural: "Inloggeschiedenis" },
   admin: {
+    // Technische API-tab verbergen: beheerders hebben er niets aan.
+    hideAPIURL: true,
     useAsTitle: "email",
     defaultColumns: ["email", "tijdstip", "resultaat", "ipAdres"],
     group: "Beheer",
