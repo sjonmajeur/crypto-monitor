@@ -17,9 +17,17 @@ import { seedIfEmpty } from "./payload/seed";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const hasBucket = Boolean(
-  process.env.BUCKET_NAME && process.env.BUCKET_ACCESS_KEY_ID,
-);
+/*
+ * De opslag-plugin wordt ALTIJD geladen, ook als de bucket-variabelen
+ * (nog) ontbreken. Zo bevat de gegenereerde importMap altijd de
+ * client-component van de plugin; laadde de plugin alleen bij gezette
+ * variabelen, dan miste die component en bleef /admin zwart met
+ * "PayloadComponent not found in importMap".
+ *
+ * Zonder bucket-variabelen werkt de rest van het CMS gewoon; alleen het
+ * uploaden van nieuwe afbeeldingen faalt dan met een duidelijke fout.
+ */
+const bucketNaam = process.env.BUCKET_NAME ?? "media";
 
 export default buildConfig({
   admin: {
@@ -38,23 +46,21 @@ export default buildConfig({
     // Schema wordt automatisch bijgewerkt; geen handmatige migraties nodig.
     push: true,
   }),
-  plugins: hasBucket
-    ? [
-        s3Storage({
-          collections: { media: true },
-          bucket: process.env.BUCKET_NAME as string,
-          config: {
-            endpoint: process.env.BUCKET_ENDPOINT,
-            region: process.env.BUCKET_REGION ?? "auto",
-            credentials: {
-              accessKeyId: process.env.BUCKET_ACCESS_KEY_ID as string,
-              secretAccessKey: process.env.BUCKET_SECRET_ACCESS_KEY as string,
-            },
-            forcePathStyle: true,
-          },
-        }),
-      ]
-    : [],
+  plugins: [
+    s3Storage({
+      collections: { media: true },
+      bucket: bucketNaam,
+      config: {
+        endpoint: process.env.BUCKET_ENDPOINT,
+        region: process.env.BUCKET_REGION ?? "auto",
+        credentials: {
+          accessKeyId: process.env.BUCKET_ACCESS_KEY_ID ?? "",
+          secretAccessKey: process.env.BUCKET_SECRET_ACCESS_KEY ?? "",
+        },
+        forcePathStyle: true,
+      },
+    }),
+  ],
   // Bij de eerste start het CMS vullen met de huidige teksten.
   onInit: async (payload) => {
     await seedIfEmpty(payload);

@@ -1,15 +1,17 @@
 {
   "name": "artchy",
   "version": "0.1.0",
+  "type": "module",
   "engines": {
     "node": ">=20.9.0"
   },
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "payload generate:importmap && next build",
     "start": "next start -p ${PORT:-3000}",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate:importmap": "payload generate:importmap"
   },
   "dependencies": {
     "@netlify/blobs": "^10.7.11",

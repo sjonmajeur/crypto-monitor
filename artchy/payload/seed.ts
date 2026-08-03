@@ -1,13 +1,17 @@
 import type { Payload } from "payload";
 
-import artistsContent from "../content/artists.json";
-import { DEFAULT_HOMEPAGE, DEFAULT_SITE_SETTINGS } from "../lib/cms/defaults";
+import {
+  DEFAULT_ARTISTS,
+  DEFAULT_HOMEPAGE,
+  DEFAULT_SITE_SETTINGS,
+} from "../lib/cms/defaults";
 
 /*
- * Bewust geen import uit lib/artists.ts: die laadt afbeeldingen via de
- * Next-bundler en is daardoor niet bruikbaar in de Payload-CLI.
+ * Bewust geen import uit lib/artists.ts of een JSON-bestand: die zijn
+ * niet laadbaar buiten de Next-bundler, en de Payload-CLI heeft deze
+ * config wel nodig (bijv. voor generate:importmap).
  */
-const ARTISTS = artistsContent.artists.map((a) => ({
+const ARTISTS = DEFAULT_ARTISTS.map((a) => ({
   name: a.naam,
   slug: a.naam.toLowerCase().replaceAll(" ", "-"),
   role: a.subtitel,

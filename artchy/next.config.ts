@@ -1,5 +1,10 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
   /*
@@ -11,7 +16,7 @@ const nextConfig: NextConfig = {
    */
   // De parent-repo heeft een eigen lockfile; pin de root op deze map.
   turbopack: {
-    root: __dirname,
+    root: dirname,
   },
   images: {
     remotePatterns: [
