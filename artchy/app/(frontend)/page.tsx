@@ -24,13 +24,13 @@ import { getArtists, getHomepageContent } from "@/lib/cms/content";
  * Statische imports: Next hasht de bestandsnamen (/_next/static/media/…),
  * zodat browsers na elke beeldwijziging automatisch de nieuwe versie laden.
  */
-import heroImg from "@/public/hero.jpg";
-import heroMobileImg from "@/public/hero-mobile.jpg";
+import heroImg from "@/public/hero-avond.jpg";
+import heroMobileImg from "@/public/hero-avond-mobiel.jpg";
 import collectionJoshImg from "@/public/collection-josh.jpg";
 import collectionTajiImg from "@/public/collection-taji.jpg";
 import collectionBrassImg from "@/public/collection-brass.jpg";
 import dropHoodieImg from "@/public/drop-hoodie.jpg";
-import generationImg from "@/public/generation.jpg";
+import generationImg from "@/public/generation-tafel.jpg";
 
 /*
  * Home naar het ARTCHY-model. Beelden zijn lokale placeholders in

@@ -63,6 +63,8 @@ afgesproken.
 | Migraties draaiden ook tijdens `next build`, waardoor parallelle buildworkers elkaar blokkeerden en de build afbrak | `prodMigrations` wordt overgeslagen als `NEXT_PHASE=phase-production-build`; migreren gebeurt alleen bij het opstarten | — |
 | Gravatar-avatar in het paneel gaf een kapot beeld (externe host onbereikbaar) | `admin.avatar: "default"` — geen externe aanroep meer | — |
 
+| Vijf nieuwe beelden aangeleverd via de chat (kroon, hero, generation, portretten Josh en Brass) | Kroon (transparante PNG) is het nieuwe headerlogo; hero en generation vervangen de oude AI-crops; de portretten (220px) zijn 4x opgeschaald met Real-ESRGAN naar 960px. Bestaande installaties krijgen de nieuwe beelden automatisch via een vervangingsregel in de seed — alleen velden die nog naar het oude standaardbeeld wijzen worden bijgewerkt | Kies in het CMS zelf andere beelden als een uitsnede je niet bevalt |
+
 **Nooit verzonnen (bewust):** prijzen, voorraad, varianten en SKU's. Die
 komen uitsluitend uit Shopify; zonder keys faalt de weergave hard met een
 duidelijke melding in plaats van mock-data.

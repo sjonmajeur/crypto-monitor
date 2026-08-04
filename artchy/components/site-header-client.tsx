@@ -12,7 +12,7 @@ import type { Artist } from "@/lib/artists";
 import { ARTISTS } from "@/lib/artists";
 import { DEFAULT_HOMEPAGE, DEFAULT_SITE_SETTINGS } from "@/lib/cms/defaults";
 import { cn } from "@/lib/utils";
-import logoTaji from "@/public/logo-taji.png";
+import logoKroon from "@/public/logo-kroon.png";
 
 type NavItem = { href: string; label: string };
 
@@ -177,12 +177,11 @@ export function SiteHeaderClient({
           aria-label="Artchy — home"
           className="justify-self-center"
         >
-          {/* TAJI-mascotte uit het ontwerp; screen-blend laat de donkere
-              achtergrond wegvallen in de vrijwel zwarte header */}
+          {/* De roze kroon: transparante PNG, geen blend-truc nodig */}
           <Image
-            src={logoTaji}
+            src={logoKroon}
             alt="Artchy"
-            className="h-11 w-auto mix-blend-screen"
+            className="h-10 w-auto"
             priority
           />
         </Link>

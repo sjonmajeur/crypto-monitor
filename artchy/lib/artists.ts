@@ -1,9 +1,9 @@
 import type { StaticImageData } from "next/image";
 
 import content from "@/content/artists.json";
-import creatorJoshImg from "@/public/creator-josh.jpg";
+import creatorJoshImg from "@/public/creator-josh-portret.jpg";
 import creatorTajiImg from "@/public/creator-taji.jpg";
-import creatorBrassImg from "@/public/creator-brass.jpg";
+import creatorBrassImg from "@/public/creator-brass-portret.jpg";
 
 /**
  * De teksten komen uit content/artists.json — dat bestand kan de

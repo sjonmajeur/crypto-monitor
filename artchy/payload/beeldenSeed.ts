@@ -16,16 +16,35 @@ import type { Payload } from "payload";
  */
 
 const BEELDEN: Record<string, string> = {
-  "hero.jpg": "Model in ARTCHY hoodie voor een betonnen muur",
-  "hero-mobile.jpg": "Model in ARTCHY hoodie (staand beeld)",
+  "hero-avond.jpg": "Model in Taji-hoodie voor de skyline bij zonsondergang",
+  "hero-avond-mobiel.jpg": "Model in Taji-hoodie (staande uitsnede)",
   "collection-josh.jpg": "Collectiebeeld Josh — hoodie met artwork",
   "collection-taji.jpg": "Collectiebeeld Taji — het emotiewezen",
   "collection-brass.jpg": "Collectiebeeld Brass — verfijnd zwart",
   "drop-hoodie.jpg": "De drop: zwarte hoodie met artwork",
-  "generation.jpg": "Werkplaats waar de collectie ontstaat",
-  "creator-josh.jpg": "Portret van Josh",
+  "generation-tafel.jpg": "Josh, Taji en Brass samen aan de werktafel",
+  "creator-josh-portret.jpg": "Portret van Josh",
   "creator-taji.jpg": "Portret van Taji",
-  "creator-brass.jpg": "Portret van Brass",
+  "creator-brass-portret.jpg": "Portret van Brass",
+};
+
+/**
+ * Eerdere standaardbeelden → hun opvolger. Een veld dat nog naar zo'n
+ * oud standaardbeeld wijst, krijgt automatisch de nieuwe versie; heeft
+ * een beheerder zelf iets anders gekozen, dan blijft dat staan.
+ */
+const VERVANGINGEN: Record<string, string> = {
+  "hero.jpg": "hero-avond.jpg",
+  "hero-mobile.jpg": "hero-avond-mobiel.jpg",
+  "generation.jpg": "generation-tafel.jpg",
+  "creator-josh.jpg": "creator-josh-portret.jpg",
+  "creator-brass.jpg": "creator-brass-portret.jpg",
+};
+
+const PORTRETTEN: Record<string, string> = {
+  josh: "creator-josh-portret.jpg",
+  taji: "creator-taji.jpg",
+  brass: "creator-brass-portret.jpg",
 };
 
 async function vindOfUpload(
@@ -67,6 +86,37 @@ export async function seedBeelden(payload: Payload): Promise<void> {
   type Beeld = { id?: number } | number | null | undefined;
   const leeg = (v: Beeld) => v === null || v === undefined;
 
+  /** Bestandsnaam van het gekoppelde Media-item (of null). */
+  const naamVan = async (v: Beeld): Promise<string | null> => {
+    const id = typeof v === "number" ? v : (v as { id?: number })?.id;
+    if (!id) return null;
+    try {
+      const doc = (await payload.findByID({
+        collection: "media",
+        id,
+        depth: 0,
+        overrideAccess: true,
+      })) as { filename?: string };
+      return doc?.filename ?? null;
+    } catch {
+      return null;
+    }
+  };
+
+  /**
+   * Bepaalt wat er in een beeldveld hoort: leeg → het standaardbeeld;
+   * wijst het nog naar een oud standaardbeeld → de opvolger; anders
+   * blijft de keuze van de beheerder staan (null = niets wijzigen).
+   */
+  const gewenst = async (huidig: Beeld, standaard: string): Promise<number | null> => {
+    if (leeg(huidig)) return vindOfUpload(payload, standaard);
+    const naam = await naamVan(huidig);
+    if (naam && VERVANGINGEN[naam]) {
+      return vindOfUpload(payload, VERVANGINGEN[naam]);
+    }
+    return null;
+  };
+
   try {
     // ---- Homepage -------------------------------------------------
     const homepage = (await payload.findGlobal({
@@ -88,51 +138,51 @@ export async function seedBeelden(payload: Payload): Promise<void> {
       "collection-taji.jpg",
       "collection-brass.jpg",
     ];
-    const kaartenLeeg = (homepage.collecties ?? []).some((k) => leeg(k.afbeelding));
 
-    if (
-      leeg(homepage.hero?.afbeelding) ||
-      leeg(homepage.hero?.afbeeldingMobiel) ||
-      leeg(homepage.dropAfbeelding) ||
-      leeg(homepage.verhaalAfbeelding) ||
-      kaartenLeeg
-    ) {
-      const wijziging: Record<string, unknown> = {};
+    const wijziging: Record<string, unknown> = {};
 
-      if (leeg(homepage.hero?.afbeelding) || leeg(homepage.hero?.afbeeldingMobiel)) {
-        wijziging.hero = {
-          ...homepage.hero,
-          afbeelding: leeg(homepage.hero?.afbeelding)
-            ? await vindOfUpload(payload, "hero.jpg")
-            : homepage.hero?.afbeelding,
-          afbeeldingMobiel: leeg(homepage.hero?.afbeeldingMobiel)
-            ? await vindOfUpload(payload, "hero-mobile.jpg")
-            : homepage.hero?.afbeeldingMobiel,
-        };
-      }
-      if (kaartenLeeg && homepage.collecties?.length) {
-        wijziging.collecties = await Promise.all(
-          homepage.collecties.map(async (kaart, i) => ({
-            ...kaart,
-            afbeelding: leeg(kaart.afbeelding)
-              ? await vindOfUpload(payload, kaartBestanden[i] ?? kaartBestanden[0])
-              : kaart.afbeelding,
-          })),
+    const heroNieuw = await gewenst(homepage.hero?.afbeelding, "hero-avond.jpg");
+    const heroMobielNieuw = await gewenst(
+      homepage.hero?.afbeeldingMobiel,
+      "hero-avond-mobiel.jpg",
+    );
+    if (heroNieuw !== null || heroMobielNieuw !== null) {
+      wijziging.hero = {
+        ...homepage.hero,
+        afbeelding: heroNieuw ?? homepage.hero?.afbeelding,
+        afbeeldingMobiel: heroMobielNieuw ?? homepage.hero?.afbeeldingMobiel,
+      };
+    }
+
+    if (homepage.collecties?.length) {
+      let kaartGewijzigd = false;
+      const kaarten = [];
+      for (const [i, kaart] of homepage.collecties.entries()) {
+        const nieuw = await gewenst(
+          kaart.afbeelding,
+          kaartBestanden[i] ?? kaartBestanden[0],
         );
+        if (nieuw !== null) kaartGewijzigd = true;
+        kaarten.push({ ...kaart, afbeelding: nieuw ?? kaart.afbeelding });
       }
-      if (leeg(homepage.dropAfbeelding)) {
-        wijziging.dropAfbeelding = await vindOfUpload(payload, "drop-hoodie.jpg");
-      }
-      if (leeg(homepage.verhaalAfbeelding)) {
-        wijziging.verhaalAfbeelding = await vindOfUpload(payload, "generation.jpg");
-      }
+      if (kaartGewijzigd) wijziging.collecties = kaarten;
+    }
 
+    const dropNieuw = await gewenst(homepage.dropAfbeelding, "drop-hoodie.jpg");
+    if (dropNieuw !== null) wijziging.dropAfbeelding = dropNieuw;
+    const verhaalNieuw = await gewenst(
+      homepage.verhaalAfbeelding,
+      "generation-tafel.jpg",
+    );
+    if (verhaalNieuw !== null) wijziging.verhaalAfbeelding = verhaalNieuw;
+
+    if (Object.keys(wijziging).length > 0) {
       await payload.updateGlobal({
         slug: "homepage",
         data: { ...wijziging, _status: "published" },
         overrideAccess: true,
       });
-      payload.logger.info("[beelden] Homepage-beelden gekoppeld.");
+      payload.logger.info("[beelden] Homepage-beelden gekoppeld/bijgewerkt.");
     }
 
     // ---- Creator-portretten --------------------------------------
@@ -147,10 +197,9 @@ export async function seedBeelden(payload: Payload): Promise<void> {
       slug?: string;
       portret?: Beeld;
     }>) {
-      if (!leeg(artiest.portret)) continue;
-      const bestand = `creator-${artiest.slug}.jpg`;
-      if (!(bestand in BEELDEN)) continue;
-      const beeldId = await vindOfUpload(payload, bestand);
+      const bestand = PORTRETTEN[artiest.slug ?? ""];
+      if (!bestand) continue;
+      const beeldId = await gewenst(artiest.portret, bestand);
       if (beeldId === null) continue;
       await payload.update({
         collection: "artiesten",
