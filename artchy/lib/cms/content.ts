@@ -63,6 +63,8 @@ export async function getHomepageContent(): Promise<HomepageContent> {
       afbeeldingMobiel: mediaUrl(hero.afbeeldingMobiel),
     },
     collectiesTitel: text(doc.collectiesTitel, d.collectiesTitel),
+    collectiesLinkTekst: text(doc.collectiesLinkTekst, d.collectiesLinkTekst),
+    kaartLinkTekst: text(doc.kaartLinkTekst, d.kaartLinkTekst),
     collecties: list<Record<string, unknown>>(doc.collecties, []).length
       ? list<Record<string, unknown>>(doc.collecties, []).map((c, i) => ({
           titel: text(c.titel, d.collecties[i]?.titel ?? ""),
@@ -86,14 +88,26 @@ export async function getHomepageContent(): Promise<HomepageContent> {
     dropKnopTekst: text(doc.dropKnopTekst, d.dropKnopTekst),
     dropKnopLink: text(doc.dropKnopLink, d.dropKnopLink),
     dropAfbeelding: mediaUrl(doc.dropAfbeelding),
+    klokLabels: (() => {
+      const k = (doc.klokLabels ?? {}) as Record<string, unknown>;
+      return {
+        dagen: text(k.dagen, d.klokLabels.dagen),
+        uren: text(k.uren, d.klokLabels.uren),
+        minuten: text(k.minuten, d.klokLabels.minuten),
+        seconden: text(k.seconden, d.klokLabels.seconden),
+      };
+    })(),
     creatorsEyebrow: text(doc.creatorsEyebrow, d.creatorsEyebrow),
     creatorsTitel: text(doc.creatorsTitel, d.creatorsTitel),
+    creatorsLinkTekst: text(doc.creatorsLinkTekst, d.creatorsLinkTekst),
     verhaalTitel: text(doc.verhaalTitel, d.verhaalTitel),
     verhaalTekst: text(doc.verhaalTekst, d.verhaalTekst),
     verhaalAfbeelding: mediaUrl(doc.verhaalAfbeelding),
     communityTitel: text(doc.communityTitel, d.communityTitel),
     communityTekst: text(doc.communityTekst, d.communityTekst),
     communityKnopTekst: text(doc.communityKnopTekst, d.communityKnopTekst),
+    communityPlaceholder: text(doc.communityPlaceholder, d.communityPlaceholder),
+    communityBevestiging: text(doc.communityBevestiging, d.communityBevestiging),
   };
 }
 
@@ -111,9 +125,16 @@ export async function getSiteSettings(): Promise<SiteSettingsContent> {
         }))
       : fallback;
 
+  const kolommen = (doc.kolomTitels ?? {}) as Record<string, unknown>;
   return {
     menu: linkList(doc.menu, d.menu),
     merknaam: text(doc.merknaam, d.merknaam),
+    logo: mediaUrl(doc.logo),
+    kolomTitels: {
+      menu: text(kolommen.menu, d.kolomTitels.menu),
+      info: text(kolommen.info, d.kolomTitels.info),
+      volg: text(kolommen.volg, d.kolomTitels.volg),
+    },
     merkOndertitel: text(doc.merkOndertitel, d.merkOndertitel),
     merkZin: text(doc.merkZin, d.merkZin),
     footerMenu: linkList(doc.footerMenu, d.footerMenu),
@@ -158,8 +179,37 @@ export async function getPaginasContent(): Promise<PaginasContent> {
 
   const over = (doc.over ?? {}) as Record<string, unknown>;
   const taji = (doc.taji ?? {}) as Record<string, unknown>;
+  const artiestenPagina = (doc.artiestenPagina ?? {}) as Record<string, unknown>;
+  const hoe = (doc.hoe ?? {}) as Record<string, unknown>;
+  const shop = (doc.shop ?? {}) as Record<string, unknown>;
+
+  const hoeStappen = list<{ titel?: string; tekst?: string }>(hoe.stappen, []).map(
+    (stap) => ({ titel: text(stap.titel, ""), tekst: text(stap.tekst, "") }),
+  );
 
   return {
+    artiestenPagina: {
+      eyebrow: text(artiestenPagina.eyebrow, d.artiestenPagina.eyebrow),
+      titel: text(artiestenPagina.titel, d.artiestenPagina.titel),
+      subtitel: text(artiestenPagina.subtitel, d.artiestenPagina.subtitel),
+      kaartLinkTekst: text(
+        artiestenPagina.kaartLinkTekst,
+        d.artiestenPagina.kaartLinkTekst,
+      ),
+      bioKnopTekst: text(artiestenPagina.bioKnopTekst, d.artiestenPagina.bioKnopTekst),
+    },
+    hoe: {
+      titel: text(hoe.titel, d.hoe.titel),
+      subtitel: text(hoe.subtitel, d.hoe.subtitel),
+      stappen: hoeStappen.filter((stap) => stap.titel).length
+        ? hoeStappen.filter((stap) => stap.titel)
+        : d.hoe.stappen,
+    },
+    shop: {
+      titel: text(shop.titel, d.shop.titel),
+      leegTekst: text(shop.leegTekst, d.shop.leegTekst),
+      geenMatchTekst: text(shop.geenMatchTekst, d.shop.geenMatchTekst),
+    },
     over: {
       titel: text(over.titel, d.over.titel),
       tekst: text(over.tekst, d.over.tekst),

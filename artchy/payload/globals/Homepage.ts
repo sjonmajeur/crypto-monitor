@@ -127,6 +127,18 @@ export const Homepage: GlobalConfig = {
               admin: { description: 'Bijvoorbeeld "Featured collections".' },
             },
             {
+              name: "collectiesLinkTekst",
+              type: "text",
+              label: "Linktekst rechts van de kop",
+              admin: { description: 'Bijvoorbeeld "Explore all collections". Gaat naar de shop.' },
+            },
+            {
+              name: "kaartLinkTekst",
+              type: "text",
+              label: "Linktekst onderaan elke kaart",
+              admin: { description: 'Bijvoorbeeld "Explore collection".' },
+            },
+            {
               name: "collecties",
               type: "array",
               label: "Collectiekaarten",
@@ -198,6 +210,17 @@ export const Homepage: GlobalConfig = {
             { name: "dropKnopTekst", type: "text", label: "Tekst op de knop" },
             { name: "dropKnopLink", type: "text", label: "Adres van de knop" },
             {
+              name: "klokLabels",
+              type: "group",
+              label: "Labels onder de aftelklok",
+              fields: [
+                { name: "dagen", type: "text", label: "Dagen" },
+                { name: "uren", type: "text", label: "Uren" },
+                { name: "minuten", type: "text", label: "Minuten" },
+                { name: "seconden", type: "text", label: "Seconden" },
+              ],
+            },
+            {
               name: "dropAfbeelding",
               type: "upload",
               relationTo: "media",
@@ -212,6 +235,12 @@ export const Homepage: GlobalConfig = {
           fields: [
             { name: "creatorsEyebrow", type: "text", label: "Kleine gouden regel bij de makers" },
             { name: "creatorsTitel", type: "text", label: "Kop bij de makers" },
+            {
+              name: "creatorsLinkTekst",
+              type: "text",
+              label: "Linktekst rechts van de makers-kop",
+              admin: { description: 'Bijvoorbeeld "View all creators".' },
+            },
             { name: "verhaalTitel", type: "text", label: "Kop van het verhaal" },
             {
               name: "verhaalTekst",
@@ -229,6 +258,17 @@ export const Homepage: GlobalConfig = {
             { name: "communityTitel", type: "text", label: "Kop van de nieuwsbrief" },
             { name: "communityTekst", type: "text", label: "Regel onder de kop" },
             { name: "communityKnopTekst", type: "text", label: "Tekst op de knop" },
+            {
+              name: "communityPlaceholder",
+              type: "text",
+              label: "Grijze voorbeeldtekst in het e-mailveld",
+            },
+            {
+              name: "communityBevestiging",
+              type: "text",
+              label: "Bevestiging na aanmelden",
+              admin: { description: 'Bijvoorbeeld "You\'re in — welcome to the community."' },
+            },
           ],
         },
       ],

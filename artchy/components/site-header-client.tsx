@@ -25,10 +25,13 @@ export function SiteHeaderClient({
   menu = DEFAULT_SITE_SETTINGS.menu.map((m) => ({ href: m.href, label: m.label })),
   artists = ARTISTS,
   aankondiging = DEFAULT_HOMEPAGE.aankondiging,
+  logoUrl = null,
 }: {
   menu?: NavItem[];
   artists?: Artist[];
   aankondiging?: { accentTekst: string; tekst: string; tweedeTekst: string };
+  /** Logo uit het CMS; null = de roze kroon. */
+  logoUrl?: string | null;
 } = {}) {
   // "Artists" krijgt het uitklapmenu; de rest staat ervoor of erachter.
   const shopIndex = menu.findIndex((item) => item.href === "/shop");
@@ -177,13 +180,19 @@ export function SiteHeaderClient({
           aria-label="Artchy — home"
           className="justify-self-center"
         >
-          {/* De roze kroon: transparante PNG, geen blend-truc nodig */}
-          <Image
-            src={logoKroon}
-            alt="Artchy"
-            className="h-10 w-auto"
-            priority
-          />
+          {/* Logo uit het CMS; de roze kroon als standaard */}
+          {logoUrl ? (
+            <Image
+              src={logoUrl}
+              alt="Artchy"
+              width={120}
+              height={40}
+              className="h-10 w-auto"
+              priority
+            />
+          ) : (
+            <Image src={logoKroon} alt="Artchy" className="h-10 w-auto" priority />
+          )}
         </Link>
 
         <div className="flex items-center justify-end gap-4">

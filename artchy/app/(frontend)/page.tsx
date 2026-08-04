@@ -18,7 +18,7 @@ import { Reveal } from "@/components/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
-import { getArtists, getHomepageContent } from "@/lib/cms/content";
+import { getArtists, getHomepageContent, getPaginasContent } from "@/lib/cms/content";
 
 /*
  * Statische imports: Next hasht de bestandsnamen (/_next/static/media/…),
@@ -53,9 +53,10 @@ const COLLECTION_FALLBACKS = [
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [content, artists] = await Promise.all([
+  const [content, artists, paginas] = await Promise.all([
     getHomepageContent(),
     getArtists(),
+    getPaginasContent(),
   ]);
   const { hero } = content;
   return (
@@ -125,7 +126,7 @@ export default async function Home() {
               href="/shop"
               className="label flex items-center gap-2 text-gold hover:text-snow"
             >
-              Explore all collections{" "}
+              {content.collectiesLinkTekst}{" "}
               <ArrowRight className="size-4" aria-hidden />
             </Link>
           </div>
@@ -162,7 +163,7 @@ export default async function Home() {
                       {collection.tagline}
                     </p>
                     <p className="label mt-auto flex items-center gap-2 pt-4 text-gold group-hover:text-snow">
-                      Explore collection{" "}
+                      {content.kaartLinkTekst}{" "}
                       <ArrowRight className="size-4" aria-hidden />
                     </p>
                   </div>
@@ -208,7 +209,7 @@ export default async function Home() {
             </h2>
             <p className="mt-3 text-sm text-ash">{content.dropSubregel}</p>
             <div className="mt-8">
-              <Countdown target={content.dropEinddatum} />
+              <Countdown target={content.dropEinddatum} labels={content.klokLabels} />
             </div>
             <Link href={content.dropKnopLink} className="mt-10 inline-block">
               <Button variant="outline" className="gap-2">
@@ -249,11 +250,16 @@ export default async function Home() {
               href="/artists"
               className="label flex items-center gap-2 text-gold hover:text-snow"
             >
-              View all creators <ArrowRight className="size-4" aria-hidden />
+              {content.creatorsLinkTekst}{" "}
+              <ArrowRight className="size-4" aria-hidden />
             </Link>
           </div>
           <div className="mt-8">
-            <ArtistCards artists={artists} />
+            <ArtistCards
+              artists={artists}
+              kaartLinkTekst={paginas.artiestenPagina.kaartLinkTekst}
+              bioKnopTekst={paginas.artiestenPagina.bioKnopTekst}
+            />
           </div>
         </section>
 
@@ -318,7 +324,11 @@ export default async function Home() {
                 {content.communityTekst}
               </p>
             </div>
-            <NewsletterForm />
+            <NewsletterForm
+              knopTekst={content.communityKnopTekst}
+              placeholder={content.communityPlaceholder}
+              bevestiging={content.communityBevestiging}
+            />
           </div>
         </section>
       </main>

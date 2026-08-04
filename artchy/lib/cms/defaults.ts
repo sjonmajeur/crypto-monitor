@@ -15,6 +15,8 @@ export type HomepageContent = {
     afbeeldingMobiel: string | null;
   };
   collectiesTitel: string;
+  collectiesLinkTekst: string;
+  kaartLinkTekst: string;
   collecties: Array<{
     titel: string;
     tagline: string;
@@ -30,20 +32,26 @@ export type HomepageContent = {
   dropEinddatum: string;
   dropKnopTekst: string;
   dropKnopLink: string;
+  klokLabels: { dagen: string; uren: string; minuten: string; seconden: string };
   dropAfbeelding: string | null;
   creatorsEyebrow: string;
   creatorsTitel: string;
+  creatorsLinkTekst: string;
   verhaalTitel: string;
   verhaalTekst: string;
   verhaalAfbeelding: string | null;
   communityTitel: string;
   communityTekst: string;
   communityKnopTekst: string;
+  communityPlaceholder: string;
+  communityBevestiging: string;
 };
 
 export type SiteSettingsContent = {
   menu: Array<{ label: string; href: string }>;
   merknaam: string;
+  logo: string | null;
+  kolomTitels: { menu: string; info: string; volg: string };
   merkOndertitel: string;
   merkZin: string;
   footerMenu: Array<{ label: string; href: string }>;
@@ -69,6 +77,8 @@ export const DEFAULT_HOMEPAGE: HomepageContent = {
     afbeeldingMobiel: null,
   },
   collectiesTitel: "Featured collections",
+  collectiesLinkTekst: "Explore all collections",
+  kaartLinkTekst: "Explore collection",
   collecties: [
     {
       titel: "Josh",
@@ -103,9 +113,11 @@ export const DEFAULT_HOMEPAGE: HomepageContent = {
   dropEinddatum: "2026-08-15T22:00:00+02:00",
   dropKnopTekst: "View collection",
   dropKnopLink: "/shop",
+  klokLabels: { dagen: "Days", uren: "Hrs", minuten: "Mins", seconden: "Secs" },
   dropAfbeelding: null,
   creatorsEyebrow: "The world of Artchy",
   creatorsTitel: "Meet the creators.",
+  creatorsLinkTekst: "View all creators",
   verhaalTitel: "A new generation of creativity",
   verhaalTekst:
     "Artchy is built on a unique collaboration between generations. From the raw imagination of young artist Josh, to the refined luxury vision of designer Brass, we connect creativity, culture, and identity through fashion. This is more than clothing. This is wearable art.",
@@ -114,6 +126,8 @@ export const DEFAULT_HOMEPAGE: HomepageContent = {
   communityTekst:
     "Be the first to access drops, exclusive releases, and artist stories.",
   communityKnopTekst: "Join the community",
+  communityPlaceholder: "Enter your email",
+  communityBevestiging: "You're in — welcome to the community.",
 };
 
 export const DEFAULT_SITE_SETTINGS: SiteSettingsContent = {
@@ -124,6 +138,8 @@ export const DEFAULT_SITE_SETTINGS: SiteSettingsContent = {
     { label: "About", href: "/about" },
   ],
   merknaam: "Artchy",
+  logo: null,
+  kolomTitels: { menu: "Menu", info: "Info", volg: "Follow us" },
   merkOndertitel: "Wearable art platform",
   merkZin: "Where imagination\nbecomes identity.",
   footerMenu: [
@@ -184,6 +200,28 @@ export const DEFAULT_ARTISTS = [
 ];
 
 export const DEFAULT_PAGINAS = {
+  artiestenPagina: {
+    eyebrow: "The world of Artchy",
+    titel: "Meet the creators.",
+    subtitel: "Tap a creator to read their story.",
+    kaartLinkTekst: "Learn more",
+    bioKnopTekst: "Explore {naam}'s collection",
+  },
+  hoe: {
+    titel: "How art becomes fashion",
+    subtitel: "This is how we turn art into limited wearable pieces.",
+    stappen: [
+      { titel: "Choose", tekst: "Discover art from our creators." },
+      { titel: "Unlock", tekst: "The community unlocks the design." },
+      { titel: "Produce", tekst: "We produce limited editions, never mass." },
+      { titel: "Wear", tekst: "You wear more than clothing. You wear art." },
+    ],
+  },
+  shop: {
+    titel: "Shop",
+    leegTekst: "No products in the store yet.",
+    geenMatchTekst: "No products match these filters.",
+  },
   over: {
     titel: "A new generation of creativity",
     tekst:

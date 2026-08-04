@@ -158,10 +158,76 @@ export async function seedIfEmpty(payload: Payload): Promise<void> {
       payload.logger.info("[seed] Overige pagina's gevuld.");
     }
 
+    // Later toegevoegde velden aanvullen op een bestaande installatie:
+    // alleen als ze leeg zijn, dus eigen teksten blijven altijd staan.
+    await vulNieuweVeldenAan(payload);
+
     // Beelden altijd controleren: dit vult ook een bestaande
     // installatie aan waar de tekst al staat maar de beelden nog niet.
     await seedBeelden(payload);
   } catch (error) {
     payload.logger.error({ err: error }, "[seed] Vullen van het CMS mislukt");
+  }
+}
+
+/**
+ * Velden die na de eerste oplevering aan het CMS zijn toegevoegd
+ * krijgen op een bestaande installatie alsnog hun standaardtekst —
+ * maar alleen als ze leeg zijn.
+ */
+async function vulNieuweVeldenAan(payload: Payload): Promise<void> {
+  const dH = DEFAULT_HOMEPAGE;
+
+  const homepage = (await payload.findGlobal({
+    slug: "homepage",
+  })) as unknown as Record<string, unknown> & {
+    klokLabels?: { dagen?: string };
+  };
+  if (homepage && !homepage.collectiesLinkTekst) {
+    await payload.updateGlobal({
+      slug: "homepage",
+      data: {
+        collectiesLinkTekst: dH.collectiesLinkTekst,
+        kaartLinkTekst: dH.kaartLinkTekst,
+        creatorsLinkTekst: dH.creatorsLinkTekst,
+        klokLabels: dH.klokLabels,
+        communityPlaceholder: dH.communityPlaceholder,
+        communityBevestiging: dH.communityBevestiging,
+        _status: "published",
+      },
+      overrideAccess: true,
+    });
+    payload.logger.info("[seed] Nieuwe homepage-velden aangevuld.");
+  }
+
+  const instellingen = (await payload.findGlobal({
+    slug: "site-instellingen",
+  })) as { kolomTitels?: { menu?: string } };
+  if (instellingen && !instellingen.kolomTitels?.menu) {
+    await payload.updateGlobal({
+      slug: "site-instellingen",
+      data: {
+        kolomTitels: DEFAULT_SITE_SETTINGS.kolomTitels,
+        _status: "published",
+      },
+      overrideAccess: true,
+    });
+    payload.logger.info("[seed] Kolomtitels van de footer aangevuld.");
+  }
+
+  const paginas = (await payload.findGlobal({ slug: "paginas" })) as {
+    artiestenPagina?: { titel?: string };
+  };
+  if (paginas && !paginas.artiestenPagina?.titel) {
+    await payload.updateGlobal({
+      slug: "paginas",
+      data: {
+        artiestenPagina: DEFAULT_PAGINAS.artiestenPagina,
+        hoe: DEFAULT_PAGINAS.hoe,
+        shop: DEFAULT_PAGINAS.shop,
+      },
+      overrideAccess: true,
+    });
+    payload.logger.info("[seed] Pagina-velden (artists/how/shop) aangevuld.");
   }
 }

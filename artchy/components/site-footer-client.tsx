@@ -60,7 +60,7 @@ export function SiteFooterClient({
           </p>
         </div>
         <nav aria-label="Menu">
-          <p className="label mb-4 text-snow">Menu</p>
+          <p className="label mb-4 text-snow">{settings.kolomTitels.menu}</p>
           <ul className="space-y-2 text-sm text-ash">
             {footerMenu.map((item) => (
               <li key={item.label}>
@@ -72,7 +72,7 @@ export function SiteFooterClient({
           </ul>
         </nav>
         <nav aria-label="Info">
-          <p className="label mb-4 text-snow">Info</p>
+          <p className="label mb-4 text-snow">{settings.kolomTitels.info}</p>
           {/* Zonder link tonen we alleen de tekst (pagina bestaat nog niet). */}
           <ul className="space-y-2 text-sm text-ash">
             {footerInfo.map((item) => (
@@ -89,7 +89,7 @@ export function SiteFooterClient({
           </ul>
         </nav>
         <div>
-          <p className="label mb-4 text-snow">Follow us</p>
+          <p className="label mb-4 text-snow">{settings.kolomTitels.volg}</p>
           <div className="flex gap-4 text-ash">
             {socials.instagram && (
               <a

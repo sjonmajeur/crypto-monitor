@@ -18,6 +18,8 @@ import { ARTISTS, type Artist } from "@/lib/artists";
 export function ArtistCards({
   artists = ARTISTS,
   initialOpenSlug,
+  kaartLinkTekst = "Learn more",
+  bioKnopTekst = "Explore {naam}'s collection",
 }: {
   /** Artiesten uit het CMS; zonder CMS de ingebouwde lijst. */
   artists?: Artist[];
@@ -25,6 +27,10 @@ export function ArtistCards({
   variant?: "home" | "page";
   /** Opent direct de bio van deze artiest (bijv. vanuit het menu). */
   initialOpenSlug?: string;
+  /** Linktekst onderaan elke kaart (uit het CMS). */
+  kaartLinkTekst?: string;
+  /** Knoptekst in het bio-venster; {naam} wordt vervangen. */
+  bioKnopTekst?: string;
 }) {
   const [openArtist, setOpenArtist] = useState<Artist | null>(
     () =>
@@ -70,7 +76,7 @@ export function ArtistCards({
                     setOpenArtist(artist);
                   }}
                 >
-                  Learn more <ArrowRight className="size-4" aria-hidden />
+                  {kaartLinkTekst} <ArrowRight className="size-4" aria-hidden />
                 </button>
               </div>
             </article>
@@ -82,6 +88,7 @@ export function ArtistCards({
         <ArtistBioDialog
           artist={openArtist}
           onClose={() => setOpenArtist(null)}
+          knopTekst={bioKnopTekst}
         />
       )}
     </>

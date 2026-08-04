@@ -198,12 +198,14 @@ site gebruikt pas ingebouwde reserveteksten als een veld écht leeg is.
 | Bovenkant → Gouden regel, Titelregels, Knop | De grote hero bovenaan de homepage (tekst en knop over de foto) |
 | Bovenkant → Foto / Foto (mobiel) | De grote herofoto op desktop en op telefoons |
 | Collecties → Titel + 3 kaarten (titel, tagline, link, foto) | Het blok "Chosen collections" met de drie kaarten Josh/Taji/Brass |
+| Collecties → Linktekst rechts van de kop / op elke kaart | De gouden linkjes "Explore all collections" en "Explore collection" |
 | Stappen → Titel, Subtitel, 3 stappen | Het lichte blok "How art becomes fashion" |
 | Drop → alle velden + foto | Het blok met de hoodie en de afteltimer |
 | Drop → Einddatum | Waar de afteltimer naartoe telt |
-| Creators → Gouden regel, Titel | De kop boven de drie makers (de makers zelf komen uit Artiesten) |
+| Drop → Labels onder de aftelklok | De woordjes onder de vier cijfers (Days/Hrs/Mins/Secs) |
+| Creators → Gouden regel, Titel, Linktekst | De kop boven de drie makers en het linkje "View all creators" |
 | Verhaal → Titel, Tekst, Foto | Het blok "A new generation of creativity" onderaan |
-| Nieuwsbrief → Kop, Regel, Knoptekst | Het donkere aanmeldblok helemaal onderaan de homepage |
+| Nieuwsbrief → Kop, Regel, Knoptekst, Voorbeeldtekst, Bevestiging | Het aanmeldblok onderaan: alle teksten, ook wat er ná het aanmelden verschijnt |
 
 ### Artiesten (paneel → Artiesten)
 
@@ -218,6 +220,11 @@ site gebruikt pas ingebouwde reserveteksten als een veld écht leeg is.
 
 | Veld | Plek |
 | --- | --- |
+| Artists → Gouden regel, Kop, Regel onder de kop | De koppen bovenaan /artists |
+| Artists → Linktekst op elke makerskaart | "Learn more" op de kaarten (ook op de homepage) |
+| Artists → Knop in het bio-venster | De gouden knop in het pop-upvenster; {naam} wordt de naam van de maker |
+| How it works → Kop, Regel, De vier stappen | De volledige pagina /how-it-works |
+| Shop → Kop en de twee meldingen | De kop op /shop en wat er staat als er geen producten (bij de filters) zijn |
 | Over ons → Kop, Tekst | De pagina /about |
 | Taji → alle velden | De pagina /taji |
 
@@ -225,9 +232,11 @@ site gebruikt pas ingebouwde reserveteksten als een veld écht leeg is.
 
 | Veld | Plek |
 | --- | --- |
+| Logo in de navigatiebalk | Het logo bovenaan elke pagina (leeg = de roze kroon) |
 | Menu-items | De navigatiebalk bovenaan elke pagina |
 | Merknaam, Regel, Korte zin | De linkerkolom van de footer |
 | Kolom "Menu" en kolom "Info" | De twee linkkolommen in de footer |
+| Kolomtitels | De woorden "Menu", "Info" en "Follow us" boven de kolommen |
 | Copyright, Slogan | De onderste regel van de footer |
 | Social-links | De icoontjes in de footer |
 

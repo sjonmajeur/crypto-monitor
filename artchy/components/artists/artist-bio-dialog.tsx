@@ -19,7 +19,9 @@ const FOCUSABLE =
 export function ArtistBioDialog({
   artist,
   onClose,
+  knopTekst = "Explore {naam}'s collection",
 }: {
+  knopTekst?: string;
   artist: Artist;
   onClose: () => void;
 }) {
@@ -119,7 +121,7 @@ export function ArtistBioDialog({
           </div>
           <Link href={artist.shopHref} className="mt-6 inline-block">
             <Button className="gap-2">
-              Explore {artist.name}&apos;s collection{" "}
+              {knopTekst.replace("{naam}", artist.name)}{" "}
               <ArrowRight className="size-4" aria-hidden />
             </Button>
           </Link>

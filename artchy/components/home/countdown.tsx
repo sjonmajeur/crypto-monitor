@@ -18,7 +18,15 @@ function partsUntil(target: Date): Parts {
  * Countdown voor de limited drop, naar het ARTCHY-model. Rendert pas na
  * mount om hydration-mismatch op de klok te vermijden.
  */
-export function Countdown({ target }: { target: string }) {
+type KlokLabels = { dagen: string; uren: string; minuten: string; seconden: string };
+
+export function Countdown({
+  target,
+  labels,
+}: {
+  target: string;
+  labels?: KlokLabels;
+}) {
   const [parts, setParts] = useState<Parts | null>(null);
 
   useEffect(() => {
@@ -30,10 +38,10 @@ export function Countdown({ target }: { target: string }) {
   }, [target]);
 
   const cells: Array<{ value: number | null; label: string }> = [
-    { value: parts?.days ?? null, label: "Days" },
-    { value: parts?.hours ?? null, label: "Hrs" },
-    { value: parts?.minutes ?? null, label: "Mins" },
-    { value: parts?.seconds ?? null, label: "Secs" },
+    { value: parts?.days ?? null, label: labels?.dagen ?? "Days" },
+    { value: parts?.hours ?? null, label: labels?.uren ?? "Hrs" },
+    { value: parts?.minutes ?? null, label: labels?.minuten ?? "Mins" },
+    { value: parts?.seconds ?? null, label: labels?.seconden ?? "Secs" },
   ];
 
   return (

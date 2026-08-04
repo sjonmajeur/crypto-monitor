@@ -20,6 +20,7 @@ export async function SiteHeader() {
       }))}
       artists={artists}
       aankondiging={homepage.aankondiging}
+      logoUrl={settings.logo}
     />
   );
 }

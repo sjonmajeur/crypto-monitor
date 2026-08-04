@@ -32,6 +32,16 @@ export const SiteSettings: GlobalConfig = {
           label: "Menu",
           fields: [
             {
+              name: "logo",
+              type: "upload",
+              relationTo: "media",
+              label: "Logo in de navigatiebalk",
+              admin: {
+                description:
+                  "PNG met transparante achtergrond. Laat leeg om het standaardlogo (de roze kroon) te gebruiken.",
+              },
+            },
+            {
               name: "menu",
               type: "array",
               label: "Menu-items bovenaan",
@@ -56,6 +66,16 @@ export const SiteSettings: GlobalConfig = {
           label: "Footer",
           fields: [
             { name: "merknaam", type: "text", label: "Merknaam onderaan" },
+            {
+              name: "kolomTitels",
+              type: "group",
+              label: "Kolomtitels",
+              fields: [
+                { name: "menu", type: "text", label: 'Titel boven de kolom "Menu"' },
+                { name: "info", type: "text", label: 'Titel boven de kolom "Info"' },
+                { name: "volg", type: "text", label: "Titel boven de social-links" },
+              ],
+            },
             { name: "merkOndertitel", type: "text", label: "Regel onder de merknaam" },
             { name: "merkZin", type: "textarea", label: "Korte zin" },
             {

@@ -65,6 +65,8 @@ afgesproken.
 
 | Vijf nieuwe beelden aangeleverd via de chat (kroon, hero, generation, portretten Josh en Brass) | Kroon (transparante PNG) is het nieuwe headerlogo; hero en generation vervangen de oude AI-crops; de portretten (220px) zijn 4x opgeschaald met Real-ESRGAN naar 960px. Bestaande installaties krijgen de nieuwe beelden automatisch via een vervangingsregel in de seed — alleen velden die nog naar het oude standaardbeeld wijzen worden bijgewerkt | Kies in het CMS zelf andere beelden als een uitsnede je niet bevalt |
 
+| "Elke foto en elke tekst per pagina bewerkbaar" — een reeks labels en linkjes stond nog in de code | Alles naar het CMS: linkteksten en kloklabels op home, nieuwsbriefteksten, koppen van /artists (+ kaart- en bioknop-labels), heel /how-it-works incl. de vier stappen, de shop-koppen, footer-kolomtitels en een logo-veld. Migratie + aanvul-seed zetten de huidige teksten erin op bestaande installaties | Productteksten en prijzen blijven bewust uit Shopify komen; wil je die ook hier, zeg het |
+
 **Nooit verzonnen (bewust):** prijzen, voorraad, varianten en SKU's. Die
 komen uitsluitend uit Shopify; zonder keys faalt de weergave hard met een
 duidelijke melding in plaats van mock-data.

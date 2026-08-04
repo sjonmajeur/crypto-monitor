@@ -9,7 +9,15 @@ import { Button } from "@/components/ui/button";
  * Nog niet aan een mailinglijst gekoppeld: toont na submit alleen een
  * success-melding (zie DECISIONS.md).
  */
-export function NewsletterForm() {
+export function NewsletterForm({
+  knopTekst = "Join the community",
+  placeholder = "Enter your email",
+  bevestiging = "You're in — welcome to the community.",
+}: {
+  knopTekst?: string;
+  placeholder?: string;
+  bevestiging?: string;
+}) {
   const [joined, setJoined] = useState(false);
 
   if (joined) {
@@ -20,7 +28,7 @@ export function NewsletterForm() {
         data-placeholder="true"
       >
         <Check className="size-4" aria-hidden />
-        You&apos;re in — welcome to the community.
+        {bevestiging}
       </p>
     );
   }
@@ -42,11 +50,11 @@ export function NewsletterForm() {
         id="newsletter-email"
         type="email"
         required
-        placeholder="Enter your email"
+        placeholder={placeholder}
         className="h-11 min-w-0 flex-1 border border-coal/30 bg-white px-4 text-sm text-coal placeholder:text-coal/50"
       />
       <Button type="submit" variant="dark" className="shrink-0 gap-2">
-        Join the community <ArrowRight className="size-4" aria-hidden />
+        {knopTekst} <ArrowRight className="size-4" aria-hidden />
       </Button>
     </form>
   );

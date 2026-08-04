@@ -29,6 +29,99 @@ export const Paginas: GlobalConfig = {
       type: "tabs",
       tabs: [
         {
+          label: "Artists",
+          description: "De pagina /artists en de makerskaarten.",
+          fields: [
+            {
+              name: "artiestenPagina",
+              type: "group",
+              label: "Artists-pagina",
+              fields: [
+                {
+                  name: "eyebrow",
+                  type: "text",
+                  label: "Gouden regel boven de kop",
+                  admin: { description: 'Bijvoorbeeld "The world of Artchy".' },
+                },
+                { name: "titel", type: "text", label: "Kop" },
+                {
+                  name: "subtitel",
+                  type: "text",
+                  label: "Regel onder de kop",
+                  admin: { description: 'Bijvoorbeeld "Tap a creator to read their story."' },
+                },
+                {
+                  name: "kaartLinkTekst",
+                  type: "text",
+                  label: "Linktekst op elke makerskaart",
+                  admin: {
+                    description:
+                      'Bijvoorbeeld "Learn more". Geldt ook voor de kaarten op de homepage.',
+                  },
+                },
+                {
+                  name: "bioKnopTekst",
+                  type: "text",
+                  label: "Knop in het bio-venster",
+                  admin: {
+                    description:
+                      'De naam wordt automatisch ingevuld op de plek van {naam}, bijvoorbeeld "Explore {naam}\'s collection".',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: "How it works",
+          description: "De pagina /how-it-works.",
+          fields: [
+            {
+              name: "hoe",
+              type: "group",
+              label: "How it works",
+              fields: [
+                { name: "titel", type: "text", label: "Kop" },
+                { name: "subtitel", type: "text", label: "Regel onder de kop" },
+                {
+                  name: "stappen",
+                  type: "array",
+                  label: "De vier stappen",
+                  maxRows: 6,
+                  fields: [
+                    { name: "titel", type: "text", label: "Titel", required: true },
+                    { name: "tekst", type: "text", label: "Tekst", required: true },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: "Shop",
+          description: "De koppen en meldingen op /shop.",
+          fields: [
+            {
+              name: "shop",
+              type: "group",
+              label: "Shop-pagina",
+              fields: [
+                { name: "titel", type: "text", label: "Kop" },
+                {
+                  name: "leegTekst",
+                  type: "text",
+                  label: "Melding bij een lege winkel",
+                },
+                {
+                  name: "geenMatchTekst",
+                  type: "text",
+                  label: "Melding als geen product bij de filters past",
+                },
+              ],
+            },
+          ],
+        },
+        {
           label: "Over ons",
           description: "De pagina /about.",
           fields: [

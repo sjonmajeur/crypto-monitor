@@ -542,6 +542,14 @@ export interface Homepage {
    */
   collectiesTitel?: string | null;
   /**
+   * Bijvoorbeeld "Explore all collections". Gaat naar de shop.
+   */
+  collectiesLinkTekst?: string | null;
+  /**
+   * Bijvoorbeeld "Explore collection".
+   */
+  kaartLinkTekst?: string | null;
+  /**
    * Drie kaarten geeft het mooiste beeld (één rij).
    */
   collecties?:
@@ -583,12 +591,22 @@ export interface Homepage {
   dropEinddatum?: string | null;
   dropKnopTekst?: string | null;
   dropKnopLink?: string | null;
+  klokLabels?: {
+    dagen?: string | null;
+    uren?: string | null;
+    minuten?: string | null;
+    seconden?: string | null;
+  };
   /**
    * Aanbevolen formaat: 1000x1000px, vierkant. Laat leeg om de huidige foto van de site te blijven gebruiken.
    */
   dropAfbeelding?: (number | null) | Media;
   creatorsEyebrow?: string | null;
   creatorsTitel?: string | null;
+  /**
+   * Bijvoorbeeld "View all creators".
+   */
+  creatorsLinkTekst?: string | null;
   verhaalTitel?: string | null;
   /**
    * Eén alinea van ongeveer 4 tot 6 regels.
@@ -601,6 +619,11 @@ export interface Homepage {
   communityTitel?: string | null;
   communityTekst?: string | null;
   communityKnopTekst?: string | null;
+  communityPlaceholder?: string | null;
+  /**
+   * Bijvoorbeeld "You're in — welcome to the community."
+   */
+  communityBevestiging?: string | null;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -613,6 +636,41 @@ export interface Homepage {
  */
 export interface Pagina {
   id: number;
+  artiestenPagina?: {
+    /**
+     * Bijvoorbeeld "The world of Artchy".
+     */
+    eyebrow?: string | null;
+    titel?: string | null;
+    /**
+     * Bijvoorbeeld "Tap a creator to read their story."
+     */
+    subtitel?: string | null;
+    /**
+     * Bijvoorbeeld "Learn more". Geldt ook voor de kaarten op de homepage.
+     */
+    kaartLinkTekst?: string | null;
+    /**
+     * De naam wordt automatisch ingevuld op de plek van {naam}, bijvoorbeeld "Explore {naam}'s collection".
+     */
+    bioKnopTekst?: string | null;
+  };
+  hoe?: {
+    titel?: string | null;
+    subtitel?: string | null;
+    stappen?:
+      | {
+          titel: string;
+          tekst: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  shop?: {
+    titel?: string | null;
+    leegTekst?: string | null;
+    geenMatchTekst?: string | null;
+  };
   over?: {
     /**
      * Bijvoorbeeld "A new generation of creativity".
@@ -651,6 +709,10 @@ export interface Pagina {
 export interface SiteInstellingen {
   id: number;
   /**
+   * PNG met transparante achtergrond. Laat leeg om het standaardlogo (de roze kroon) te gebruiken.
+   */
+  logo?: (number | null) | Media;
+  /**
    * De links in de balk bovenaan. "Artists" heeft automatisch een uitklapmenu met de artiesten.
    */
   menu?:
@@ -664,6 +726,11 @@ export interface SiteInstellingen {
       }[]
     | null;
   merknaam?: string | null;
+  kolomTitels?: {
+    menu?: string | null;
+    info?: string | null;
+    volg?: string | null;
+  };
   merkOndertitel?: string | null;
   merkZin?: string | null;
   footerMenu?:
@@ -725,6 +792,8 @@ export interface HomepageSelect<T extends boolean = true> {
         afbeeldingMobiel?: T;
       };
   collectiesTitel?: T;
+  collectiesLinkTekst?: T;
+  kaartLinkTekst?: T;
   collecties?:
     | T
     | {
@@ -749,15 +818,26 @@ export interface HomepageSelect<T extends boolean = true> {
   dropEinddatum?: T;
   dropKnopTekst?: T;
   dropKnopLink?: T;
+  klokLabels?:
+    | T
+    | {
+        dagen?: T;
+        uren?: T;
+        minuten?: T;
+        seconden?: T;
+      };
   dropAfbeelding?: T;
   creatorsEyebrow?: T;
   creatorsTitel?: T;
+  creatorsLinkTekst?: T;
   verhaalTitel?: T;
   verhaalTekst?: T;
   verhaalAfbeelding?: T;
   communityTitel?: T;
   communityTekst?: T;
   communityKnopTekst?: T;
+  communityPlaceholder?: T;
+  communityBevestiging?: T;
   _status?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -768,6 +848,35 @@ export interface HomepageSelect<T extends boolean = true> {
  * via the `definition` "paginas_select".
  */
 export interface PaginasSelect<T extends boolean = true> {
+  artiestenPagina?:
+    | T
+    | {
+        eyebrow?: T;
+        titel?: T;
+        subtitel?: T;
+        kaartLinkTekst?: T;
+        bioKnopTekst?: T;
+      };
+  hoe?:
+    | T
+    | {
+        titel?: T;
+        subtitel?: T;
+        stappen?:
+          | T
+          | {
+              titel?: T;
+              tekst?: T;
+              id?: T;
+            };
+      };
+  shop?:
+    | T
+    | {
+        titel?: T;
+        leegTekst?: T;
+        geenMatchTekst?: T;
+      };
   over?:
     | T
     | {
@@ -792,6 +901,7 @@ export interface PaginasSelect<T extends boolean = true> {
  * via the `definition` "site-instellingen_select".
  */
 export interface SiteInstellingenSelect<T extends boolean = true> {
+  logo?: T;
   menu?:
     | T
     | {
@@ -800,6 +910,13 @@ export interface SiteInstellingenSelect<T extends boolean = true> {
         id?: T;
       };
   merknaam?: T;
+  kolomTitels?:
+    | T
+    | {
+        menu?: T;
+        info?: T;
+        volg?: T;
+      };
   merkOndertitel?: T;
   merkZin?: T;
   footerMenu?:
