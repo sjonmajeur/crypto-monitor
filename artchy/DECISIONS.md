@@ -67,6 +67,8 @@ afgesproken.
 
 | "Elke foto en elke tekst per pagina bewerkbaar" — een reeks labels en linkjes stond nog in de code | Alles naar het CMS: linkteksten en kloklabels op home, nieuwsbriefteksten, koppen van /artists (+ kaart- en bioknop-labels), heel /how-it-works incl. de vier stappen, de shop-koppen, footer-kolomtitels en een logo-veld. Migratie + aanvul-seed zetten de huidige teksten erin op bestaande installaties | Productteksten en prijzen blijven bewust uit Shopify komen; wil je die ook hier, zeg het |
 
+| Elke artiest een eigen pagina, consistent en op één plek beheerd | Dynamische route /[artiest] op basis van de Artiesten-collectie met een "Eigen pagina"-groep; de Taji-teksten zijn per migratie verhuisd uit het oude tabblad (niets verloren) en dat tabblad is weg; Josh en Brass kregen een eerste versie uit hun bio's met hun portret als beeld; slug-validatie voorkomt botsingen met vaste routes | Vervang de eerste versies van Josh en Brass door hun echte verhalen zodra je die hebt |
+
 **Nooit verzonnen (bewust):** prijzen, voorraad, varianten en SKU's. Die
 komen uitsluitend uit Shopify; zonder keys faalt de weergave hard met een
 duidelijke melding in plaats van mock-data.

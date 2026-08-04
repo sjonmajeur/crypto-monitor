@@ -212,9 +212,13 @@ site gebruikt pas ingebouwde reserveteksten als een veld écht leeg is.
 | Veld | Plek |
 | --- | --- |
 | Naam, Subtitel, Korte omschrijving | De makerskaarten op de homepage én op /artists |
+| Webadres-naam | Het adres van de eigen pagina (bijv. "josh" wordt /josh) en de shop-link |
 | Biografie | Het pop-upvenster "Meer over …" op /artists |
 | Portretfoto | De foto op beide plekken |
-| Volgorde | Wie links/midden/rechts staat |
+| Eigen pagina → Gouden regel, Grote kop, Verhaal | De eigen pagina van de artiest (/taji, /josh, /brass) |
+| Eigen pagina → Beelden | De foto's op die pagina (maximaal 4) |
+| Eigen pagina → Binnenkort-regel, Shop-knop | De onderste regel en de gouden knop naar de collectie |
+| Volgorde | Wie links/midden/rechts staat (ook in het Artists-menu) |
 
 ### Overige pagina's (paneel → Overige pagina's)
 
@@ -223,10 +227,13 @@ site gebruikt pas ingebouwde reserveteksten als een veld écht leeg is.
 | Artists → Gouden regel, Kop, Regel onder de kop | De koppen bovenaan /artists |
 | Artists → Linktekst op elke makerskaart | "Learn more" op de kaarten (ook op de homepage) |
 | Artists → Knop in het bio-venster | De gouden knop in het pop-upvenster; {naam} wordt de naam van de maker |
+| Artists → Pagina-knop in het bio-venster | De link in de pop-up naar de eigen pagina van de maker |
 | How it works → Kop, Regel, De vier stappen | De volledige pagina /how-it-works |
 | Shop → Kop en de twee meldingen | De kop op /shop en wat er staat als er geen producten (bij de filters) zijn |
 | Over ons → Kop, Tekst | De pagina /about |
-| Taji → alle velden | De pagina /taji |
+
+> De pagina van een artiest (zoals /taji) beheer je niet meer hier maar
+> bij **Artiesten**, onder het kopje *Eigen pagina*.
 
 ### Footer & algemeen (paneel → Footer & algemeen)
 

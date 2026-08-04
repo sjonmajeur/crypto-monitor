@@ -1,6 +1,7 @@
 import type { Payload } from "payload";
 
 import {
+  DEFAULT_ARTIEST_PAGINAS,
   DEFAULT_ARTISTS,
   DEFAULT_HOMEPAGE,
   DEFAULT_PAGINAS,
@@ -213,6 +214,63 @@ async function vulNieuweVeldenAan(payload: Payload): Promise<void> {
       overrideAccess: true,
     });
     payload.logger.info("[seed] Kolomtitels van de footer aangevuld.");
+  }
+
+  // Eigen pagina per artiest: eerste versie op basis van bio en beeld.
+  const artiesten = await payload.find({
+    collection: "artiesten",
+    limit: 20,
+    depth: 0,
+    overrideAccess: true,
+  });
+  for (const artiest of artiesten.docs as Array<{
+    id: number;
+    slug?: string;
+    portret?: number | { id?: number } | null;
+    pagina?: {
+      kop?: string | null;
+      beelden?: unknown[] | null;
+    } | null;
+  }>) {
+    const portret =
+      typeof artiest.portret === "number"
+        ? artiest.portret
+        : (artiest.portret?.id ?? null);
+
+    if (artiest.pagina?.kop) {
+      // Pagina bestaat al (bijv. door de Taji-verhuizing) maar heeft
+      // nog geen beeld: koppel dan alsnog het portret.
+      if (!artiest.pagina.beelden?.length && portret) {
+        await payload.update({
+          collection: "artiesten",
+          id: artiest.id,
+          data: { pagina: { beelden: [{ beeld: portret }] } },
+          overrideAccess: true,
+        });
+        payload.logger.info(`[seed] Paginabeeld gekoppeld voor ${artiest.slug}.`);
+      }
+      continue;
+    }
+    const d = DEFAULT_ARTIEST_PAGINAS[artiest.slug ?? ""];
+    if (!d) continue;
+    const portretId = portret;
+    await payload.update({
+      collection: "artiesten",
+      id: artiest.id,
+      data: {
+        pagina: {
+          eyebrow: d.eyebrow,
+          kop: d.kop,
+          tekst: paragraphsToLexical(d.alineas),
+          beelden: portretId ? [{ beeld: portretId }] : [],
+          binnenkort: d.binnenkort,
+          knopTekst: d.knopTekst,
+          knopLink: d.knopLink,
+        },
+      },
+      overrideAccess: true,
+    });
+    payload.logger.info(`[seed] Eigen pagina gevuld voor ${artiest.slug}.`);
   }
 
   const paginas = (await payload.findGlobal({ slug: "paginas" })) as {

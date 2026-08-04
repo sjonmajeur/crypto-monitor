@@ -15,7 +15,7 @@ export const Paginas: GlobalConfig = {
     hideAPIURL: true,
     group: "Inhoud",
     description:
-      "De teksten van de pagina's Over ons en Taji. Opslaan is hier meteen zichtbaar op de site.",
+      "De teksten van de pagina's Artists, How it works, Shop en Over ons. De eigen pagina van een artiest beheer je bij Artiesten. Opslaan is hier meteen zichtbaar.",
   },
   access: {
     read: () => true,
@@ -57,6 +57,15 @@ export const Paginas: GlobalConfig = {
                   admin: {
                     description:
                       'Bijvoorbeeld "Learn more". Geldt ook voor de kaarten op de homepage.',
+                  },
+                },
+                {
+                  name: "bioPaginaKnopTekst",
+                  type: "text",
+                  label: "Pagina-knop in het bio-venster",
+                  admin: {
+                    description:
+                      'Link naar de eigen pagina van de maker, bijvoorbeeld "Bekijk de pagina van {naam}".',
                   },
                 },
                 {
@@ -144,41 +153,6 @@ export const Paginas: GlobalConfig = {
                     description: "Het verhaal onder de kop. Enter geeft een nieuwe alinea.",
                   },
                 },
-              ],
-            },
-          ],
-        },
-        {
-          label: "Taji",
-          description: "De pagina /taji.",
-          fields: [
-            {
-              name: "taji",
-              type: "group",
-              label: "Taji",
-              fields: [
-                {
-                  name: "eyebrow",
-                  type: "text",
-                  label: "Gouden regel boven de kop",
-                  admin: { description: 'Bijvoorbeeld "The emotion creature".' },
-                },
-                { name: "titel", type: "text", label: "Kop" },
-                {
-                  name: "tekst",
-                  type: "textarea",
-                  label: "Tekst",
-                  admin: { description: "Enter geeft een nieuwe alinea." },
-                },
-                {
-                  name: "binnenkort",
-                  type: "text",
-                  label: "Binnenkort-regel",
-                  admin: {
-                    description: 'Bijvoorbeeld "The full world of Taji is coming soon."',
-                  },
-                },
-                { name: "knopTekst", type: "text", label: "Tekst op de shop-knop" },
               ],
             },
           ],

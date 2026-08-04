@@ -259,6 +259,7 @@ export default async function Home() {
               artists={artists}
               kaartLinkTekst={paginas.artiestenPagina.kaartLinkTekst}
               bioKnopTekst={paginas.artiestenPagina.bioKnopTekst}
+              bioPaginaKnopTekst={paginas.artiestenPagina.bioPaginaKnopTekst}
             />
           </div>
         </section>

@@ -205,6 +205,7 @@ export const DEFAULT_PAGINAS = {
     titel: "Meet the creators.",
     subtitel: "Tap a creator to read their story.",
     kaartLinkTekst: "Learn more",
+    bioPaginaKnopTekst: "Bekijk de pagina van {naam}",
     bioKnopTekst: "Explore {naam}'s collection",
   },
   hoe: {
@@ -227,13 +228,54 @@ export const DEFAULT_PAGINAS = {
     tekst:
       "Artchy is built on a unique collaboration between generations. From the raw imagination of young artist Josh, to the refined luxury vision of designer Brass, we connect creativity, culture, and identity through fashion. This is more than clothing. This is wearable art.",
   },
+};
+
+/**
+ * Eerste versie van de eigen pagina per artiest: gebruikt bij het
+ * vullen van een lege installatie en als terugval zonder CMS.
+ */
+export const DEFAULT_ARTIEST_PAGINAS: Record<
+  string,
+  {
+    eyebrow: string;
+    kop: string;
+    alineas: string[];
+    binnenkort: string;
+    knopTekst: string;
+    knopLink: string;
+  }
+> = {
   taji: {
     eyebrow: "The emotion creature",
-    titel: "Taji",
-    tekst:
+    kop: "Taji",
+    alineas: [
       "Born from imagination. Powered by emotion. Wear your feelings — that's TAJI.",
+    ],
     binnenkort: "The full world of Taji is coming soon.",
     knopTekst: "Shop the Taji collection",
+    knopLink: "/shop?type=taji",
+  },
+  josh: {
+    eyebrow: "The young visionary",
+    kop: "Josh",
+    alineas: [
+      "Raw imagination. Limitless creativity. Josh draws worlds the way only a kid can — without rules, without limits.",
+      "Every piece starts as a sketch at the kitchen table and ends as wearable art.",
+    ],
+    binnenkort: "The full world of Josh is coming soon.",
+    knopTekst: "Shop the Josh collection",
+    knopLink: "/shop?type=josh",
+  },
+  brass: {
+    eyebrow: "The luxury artist",
+    kop: "Brass",
+    alineas: [
+      "Refined lines, timeless black, collaborations with global brands. Brass turns streetwear into luxury.",
+      "His designs carry the calm confidence of a craftsman who lets the work speak.",
+    ],
+    binnenkort: "The full world of Brass is coming soon.",
+    knopTekst: "Shop the Brass collection",
+    knopLink: "/shop?type=brass",
   },
 };
 

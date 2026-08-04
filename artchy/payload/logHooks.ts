@@ -59,7 +59,9 @@ export function logWijziging(
       verborgen: isEigenaar(gebruiker),
     });
 
-    await hervalideer(slug);
+    // Artiesten hebben een eigen pagina die ook mee moet verversen.
+    const docSlug = (doc as { slug?: string })?.slug;
+    await hervalideer(slug, docSlug ? [`/${docSlug}`] : []);
     return doc;
   };
 }

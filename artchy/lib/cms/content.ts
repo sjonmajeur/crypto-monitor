@@ -9,6 +9,7 @@ import {
 } from "./client";
 import { ARTISTS, type Artist } from "@/lib/artists";
 import {
+  DEFAULT_ARTIEST_PAGINAS,
   DEFAULT_HOMEPAGE,
   DEFAULT_PAGINAS,
   DEFAULT_SITE_SETTINGS,
@@ -178,7 +179,6 @@ export async function getPaginasContent(): Promise<PaginasContent> {
   if (!doc) return d;
 
   const over = (doc.over ?? {}) as Record<string, unknown>;
-  const taji = (doc.taji ?? {}) as Record<string, unknown>;
   const artiestenPagina = (doc.artiestenPagina ?? {}) as Record<string, unknown>;
   const hoe = (doc.hoe ?? {}) as Record<string, unknown>;
   const shop = (doc.shop ?? {}) as Record<string, unknown>;
@@ -195,6 +195,10 @@ export async function getPaginasContent(): Promise<PaginasContent> {
       kaartLinkTekst: text(
         artiestenPagina.kaartLinkTekst,
         d.artiestenPagina.kaartLinkTekst,
+      ),
+      bioPaginaKnopTekst: text(
+        artiestenPagina.bioPaginaKnopTekst,
+        d.artiestenPagina.bioPaginaKnopTekst,
       ),
       bioKnopTekst: text(artiestenPagina.bioKnopTekst, d.artiestenPagina.bioKnopTekst),
     },
@@ -214,12 +218,70 @@ export async function getPaginasContent(): Promise<PaginasContent> {
       titel: text(over.titel, d.over.titel),
       tekst: text(over.tekst, d.over.tekst),
     },
-    taji: {
-      eyebrow: text(taji.eyebrow, d.taji.eyebrow),
-      titel: text(taji.titel, d.taji.titel),
-      tekst: text(taji.tekst, d.taji.tekst),
-      binnenkort: text(taji.binnenkort, d.taji.binnenkort),
-      knopTekst: text(taji.knopTekst, d.taji.knopTekst),
-    },
+  };
+}
+
+export type ArtiestPagina = {
+  naam: string;
+  slug: string;
+  eyebrow: string;
+  kop: string;
+  alineas: string[];
+  beelden: Array<{ url: string; alt: string }>;
+  binnenkort: string;
+  knopTekst: string;
+  knopLink: string;
+};
+
+/**
+ * De eigen pagina van één artiest (bijv. /josh). Alles komt uit het
+ * Artiesten-record; lege velden vallen terug op zinnige waarden
+ * (naam, bio, shop-link), zodat de pagina nooit halfleeg oogt.
+ */
+export async function getArtiestPagina(slug: string): Promise<ArtiestPagina | null> {
+  const docs = await getCollection<Record<string, unknown>>("artiesten", {
+    sort: "volgorde",
+  });
+
+  const d = DEFAULT_ARTIEST_PAGINAS[slug];
+  const doc = docs?.find((a) => a.slug === slug);
+  if (!doc) {
+    // Zonder CMS (of onbekende artiest): alleen de drie ingebouwde.
+    if (!d) return null;
+    return {
+      naam: d.kop,
+      slug,
+      eyebrow: d.eyebrow,
+      kop: d.kop,
+      alineas: d.alineas,
+      beelden: [],
+      binnenkort: d.binnenkort,
+      knopTekst: d.knopTekst,
+      knopLink: d.knopLink,
+    };
+  }
+
+  const naam = text(doc.naam, d?.kop ?? slug);
+  const pagina = (doc.pagina ?? {}) as Record<string, unknown>;
+  const alineas = richTextToParagraphs(pagina.tekst);
+  const bio = richTextToParagraphs(doc.bio);
+
+  const beelden = list<Record<string, unknown>>(pagina.beelden, [])
+    .map((rij) => ({
+      url: mediaUrl(rij.beeld),
+      alt: mediaAlt(rij.beeld, naam),
+    }))
+    .filter((b): b is { url: string; alt: string } => Boolean(b.url));
+
+  return {
+    naam,
+    slug,
+    eyebrow: text(pagina.eyebrow, text(doc.subtitel, d?.eyebrow ?? "")),
+    kop: text(pagina.kop, naam),
+    alineas: alineas.length ? alineas : bio.length ? bio : (d?.alineas ?? []),
+    beelden,
+    binnenkort: text(pagina.binnenkort, d?.binnenkort ?? ""),
+    knopTekst: text(pagina.knopTekst, d?.knopTekst ?? `Shop the ${naam} collection`),
+    knopLink: text(pagina.knopLink, `/shop?type=${slug}`),
   };
 }

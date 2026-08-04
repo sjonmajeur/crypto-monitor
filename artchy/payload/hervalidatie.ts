@@ -7,7 +7,10 @@
  * kan hervalideren niet; dan slaan we het stil over — de pagina's
  * lezen toch per bezoek.
  */
-export async function hervalideer(onderdeel: string): Promise<void> {
+export async function hervalideer(
+  onderdeel: string,
+  extraPaden: string[] = [],
+): Promise<void> {
   try {
     const { revalidatePath } = await import("next/cache");
 
@@ -17,11 +20,14 @@ export async function hervalideer(onderdeel: string): Promise<void> {
         break;
       case "paginas":
         revalidatePath("/about");
-        revalidatePath("/taji");
+        revalidatePath("/artists");
+        revalidatePath("/how-it-works");
+        revalidatePath("/shop");
         break;
       case "artiesten":
         revalidatePath("/");
         revalidatePath("/artists");
+        for (const pad of extraPaden) revalidatePath(pad);
         break;
       // Menu, footer en beelden staan overal: alles verversen.
       case "site-instellingen":

@@ -137,7 +137,7 @@ export function SiteHeaderClient({
                   {artists.map((artist) => (
                     <Link
                       key={artist.slug}
-                      href={`/artists?artist=${artist.slug}`}
+                      href={`/${artist.slug}`}
                       className="label block px-4 py-2.5 text-snow hover:text-gold"
                       onClick={closeAll}
                     >
@@ -244,7 +244,7 @@ export function SiteHeaderClient({
                 {artists.map((artist) => (
                   <li key={artist.slug}>
                     <Link
-                      href={`/artists?artist=${artist.slug}`}
+                      href={`/${artist.slug}`}
                       className="label block py-2.5 text-ash transition-colors hover:text-gold"
                       onClick={closeAll}
                     >

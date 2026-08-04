@@ -205,7 +205,7 @@ export interface Artiesten {
    */
   naam: string;
   /**
-   * Kleine letters, geen spaties. Bepaalt de link naar de collectie, bijv. "josh" wordt /shop?type=josh.
+   * Kleine letters, geen spaties. Bepaalt het adres van de eigen pagina (bijv. "josh" wordt /josh) én de shop-link /shop?type=josh.
    */
   slug: string;
   /**
@@ -238,6 +238,55 @@ export interface Artiesten {
    * Staand beeld. Aanbevolen formaat: 1200x1500px (verhouding 4:5), JPG.
    */
   portret?: (number | null) | Media;
+  /**
+   * De eigen pagina van deze artiest (bijv. /josh). Zelfde opzet als de Taji-pagina.
+   */
+  pagina?: {
+    /**
+     * Bijvoorbeeld "The emotion creature".
+     */
+    eyebrow?: string | null;
+    /**
+     * Laat leeg om de naam van de artiest te gebruiken.
+     */
+    kop?: string | null;
+    /**
+     * Het verhaal op de pagina. Enter geeft een nieuwe alinea.
+     */
+    tekst?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    /**
+     * Foto's op de pagina. Laat leeg om alleen tekst te tonen.
+     */
+    beelden?:
+      | {
+          beeld: number | Media;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Bijvoorbeeld "The full world of Taji is coming soon." Laat leeg om geen regel te tonen.
+     */
+    binnenkort?: string | null;
+    knopTekst?: string | null;
+    /**
+     * Bijvoorbeeld "/shop?type=josh".
+     */
+    knopLink?: string | null;
+  };
   /**
    * Laag getal staat vooraan (1, 2, 3...).
    */
@@ -421,6 +470,22 @@ export interface ArtiestenSelect<T extends boolean = true> {
   tagline?: T;
   bio?: T;
   portret?: T;
+  pagina?:
+    | T
+    | {
+        eyebrow?: T;
+        kop?: T;
+        tekst?: T;
+        beelden?:
+          | T
+          | {
+              beeld?: T;
+              id?: T;
+            };
+        binnenkort?: T;
+        knopTekst?: T;
+        knopLink?: T;
+      };
   volgorde?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -629,7 +694,7 @@ export interface Homepage {
   createdAt?: string | null;
 }
 /**
- * De teksten van de pagina's Over ons en Taji. Opslaan is hier meteen zichtbaar op de site.
+ * De teksten van de pagina's Artists, How it works, Shop en Over ons. De eigen pagina van een artiest beheer je bij Artiesten. Opslaan is hier meteen zichtbaar.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "paginas".
@@ -650,6 +715,10 @@ export interface Pagina {
      * Bijvoorbeeld "Learn more". Geldt ook voor de kaarten op de homepage.
      */
     kaartLinkTekst?: string | null;
+    /**
+     * Link naar de eigen pagina van de maker, bijvoorbeeld "Bekijk de pagina van {naam}".
+     */
+    bioPaginaKnopTekst?: string | null;
     /**
      * De naam wordt automatisch ingevuld op de plek van {naam}, bijvoorbeeld "Explore {naam}'s collection".
      */
@@ -680,22 +749,6 @@ export interface Pagina {
      * Het verhaal onder de kop. Enter geeft een nieuwe alinea.
      */
     tekst?: string | null;
-  };
-  taji?: {
-    /**
-     * Bijvoorbeeld "The emotion creature".
-     */
-    eyebrow?: string | null;
-    titel?: string | null;
-    /**
-     * Enter geeft een nieuwe alinea.
-     */
-    tekst?: string | null;
-    /**
-     * Bijvoorbeeld "The full world of Taji is coming soon."
-     */
-    binnenkort?: string | null;
-    knopTekst?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -855,6 +908,7 @@ export interface PaginasSelect<T extends boolean = true> {
         titel?: T;
         subtitel?: T;
         kaartLinkTekst?: T;
+        bioPaginaKnopTekst?: T;
         bioKnopTekst?: T;
       };
   hoe?:
@@ -882,15 +936,6 @@ export interface PaginasSelect<T extends boolean = true> {
     | {
         titel?: T;
         tekst?: T;
-      };
-  taji?:
-    | T
-    | {
-        eyebrow?: T;
-        titel?: T;
-        tekst?: T;
-        binnenkort?: T;
-        knopTekst?: T;
       };
   updatedAt?: T;
   createdAt?: T;

@@ -39,6 +39,7 @@ export default async function ArtistsPage({
             initialOpenSlug={artist}
             kaartLinkTekst={artiestenPagina.kaartLinkTekst}
             bioKnopTekst={artiestenPagina.bioKnopTekst}
+            bioPaginaKnopTekst={artiestenPagina.bioPaginaKnopTekst}
           />
         </div>
       </main>

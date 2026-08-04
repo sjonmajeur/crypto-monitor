@@ -20,8 +20,11 @@ export function ArtistBioDialog({
   artist,
   onClose,
   knopTekst = "Explore {naam}'s collection",
+  paginaKnopTekst = "Bekijk de pagina van {naam}",
 }: {
   knopTekst?: string;
+  /** Tekst van de link naar de eigen pagina; {naam} wordt vervangen. */
+  paginaKnopTekst?: string;
   artist: Artist;
   onClose: () => void;
 }) {
@@ -119,12 +122,21 @@ export function ArtistBioDialog({
               <p key={i}>{paragraph}</p>
             ))}
           </div>
-          <Link href={artist.shopHref} className="mt-6 inline-block">
-            <Button className="gap-2">
-              {knopTekst.replace("{naam}", artist.name)}{" "}
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <Link href={artist.shopHref} className="inline-block">
+              <Button className="gap-2">
+                {knopTekst.replace("{naam}", artist.name)}{" "}
+                <ArrowRight className="size-4" aria-hidden />
+              </Button>
+            </Link>
+            <Link
+              href={`/${artist.slug}`}
+              className="label flex items-center gap-2 text-gold hover:text-snow"
+            >
+              {paginaKnopTekst.replace("{naam}", artist.name)}{" "}
               <ArrowRight className="size-4" aria-hidden />
-            </Button>
-          </Link>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

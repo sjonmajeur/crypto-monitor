@@ -3,6 +3,7 @@ import * as goedkeuringEnLogboek from "./20260803_143100_goedkeuring_en_logboek"
 import * as eersteEigenaar from "./20260803_143200_eerste_eigenaar";
 import * as paginas from "./20260803_171500_paginas";
 import * as allesBewerkbaar from "./20260804_091500_alles_bewerkbaar";
+import * as artiestpaginas from "./20260804_134500_artiestpaginas";
 
 /**
  * Alle databasemigraties, op volgorde. Payload draait ze automatisch
@@ -30,5 +31,10 @@ export const migraties = [
     up: allesBewerkbaar.up,
     down: allesBewerkbaar.down,
     name: "20260804_091500_alles_bewerkbaar",
+  },
+  {
+    up: artiestpaginas.up,
+    down: artiestpaginas.down,
+    name: "20260804_134500_artiestpaginas",
   },
 ];

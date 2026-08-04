@@ -4,6 +4,26 @@ import { logVerwijdering, logWijziging } from "../logHooks";
 import { isActief } from "../rechten";
 
 /**
+ * Adressen die al bestaan op de site; een artiest mag die niet als
+ * webadres-naam krijgen, anders verdwijnt zijn pagina achter een
+ * bestaande route.
+ */
+const GERESERVEERDE_SLUGS = [
+  "shop",
+  "artists",
+  "about",
+  "how-it-works",
+  "checkout",
+  "order",
+  "product",
+  "sandbox",
+  "aanmelden",
+  "eigenaar",
+  "admin",
+  "api",
+];
+
+/**
  * De artiesten (Josh, Taji, Brass). Wordt gebruikt op de homepage,
  * /artists en in de bio-popups.
  */
@@ -47,9 +67,19 @@ export const Artists: CollectionConfig = {
       label: "Webadres-naam",
       required: true,
       unique: true,
+      validate: (waarde: unknown) => {
+        const slug = String(waarde ?? "").toLowerCase();
+        if (!/^[a-z0-9-]+$/.test(slug)) {
+          return "Alleen kleine letters, cijfers en streepjes.";
+        }
+        if (GERESERVEERDE_SLUGS.includes(slug)) {
+          return `"${slug}" is al een pagina van de site; kies een andere naam.`;
+        }
+        return true;
+      },
       admin: {
         description:
-          'Kleine letters, geen spaties. Bepaalt de link naar de collectie, bijv. "josh" wordt /shop?type=josh.',
+          'Kleine letters, geen spaties. Bepaalt het adres van de eigen pagina (bijv. "josh" wordt /josh) én de shop-link /shop?type=josh.',
       },
     },
     {
@@ -90,6 +120,69 @@ export const Artists: CollectionConfig = {
         description:
           "Staand beeld. Aanbevolen formaat: 1200x1500px (verhouding 4:5), JPG.",
       },
+    },
+    {
+      name: "pagina",
+      type: "group",
+      label: "Eigen pagina",
+      admin: {
+        description:
+          "De eigen pagina van deze artiest (bijv. /josh). Zelfde opzet als de Taji-pagina.",
+      },
+      fields: [
+        {
+          name: "eyebrow",
+          type: "text",
+          label: "Gouden regel boven de kop",
+          admin: { description: 'Bijvoorbeeld "The emotion creature".' },
+        },
+        {
+          name: "kop",
+          type: "text",
+          label: "Grote kop",
+          admin: { description: "Laat leeg om de naam van de artiest te gebruiken." },
+        },
+        {
+          name: "tekst",
+          type: "richText",
+          label: "Verhaal",
+          admin: { description: "Het verhaal op de pagina. Enter geeft een nieuwe alinea." },
+        },
+        {
+          name: "beelden",
+          type: "array",
+          label: "Beelden",
+          maxRows: 4,
+          admin: {
+            description:
+              "Foto's op de pagina. Laat leeg om alleen tekst te tonen.",
+          },
+          fields: [
+            {
+              name: "beeld",
+              type: "upload",
+              relationTo: "media",
+              label: "Foto",
+              required: true,
+            },
+          ],
+        },
+        {
+          name: "binnenkort",
+          type: "text",
+          label: "Binnenkort-regel",
+          admin: {
+            description: 'Bijvoorbeeld "The full world of Taji is coming soon." Laat leeg om geen regel te tonen.',
+          },
+        },
+        { name: "knopTekst", type: "text", label: "Tekst op de shop-knop" },
+        {
+          name: "knopLink",
+          type: "text",
+          label: "Adres van de shop-knop",
+          admin: { description: 'Bijvoorbeeld "/shop?type=josh".' },
+        },
+      ],
     },
     {
       name: "volgorde",

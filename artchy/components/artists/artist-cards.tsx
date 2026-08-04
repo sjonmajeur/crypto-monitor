@@ -20,6 +20,7 @@ export function ArtistCards({
   initialOpenSlug,
   kaartLinkTekst = "Learn more",
   bioKnopTekst = "Explore {naam}'s collection",
+  bioPaginaKnopTekst = "Bekijk de pagina van {naam}",
 }: {
   /** Artiesten uit het CMS; zonder CMS de ingebouwde lijst. */
   artists?: Artist[];
@@ -31,6 +32,8 @@ export function ArtistCards({
   kaartLinkTekst?: string;
   /** Knoptekst in het bio-venster; {naam} wordt vervangen. */
   bioKnopTekst?: string;
+  /** Link naar de eigen pagina in het bio-venster. */
+  bioPaginaKnopTekst?: string;
 }) {
   const [openArtist, setOpenArtist] = useState<Artist | null>(
     () =>
@@ -89,6 +92,7 @@ export function ArtistCards({
           artist={openArtist}
           onClose={() => setOpenArtist(null)}
           knopTekst={bioKnopTekst}
+          paginaKnopTekst={bioPaginaKnopTekst}
         />
       )}
     </>
