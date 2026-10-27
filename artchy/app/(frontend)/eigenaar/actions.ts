@@ -4,6 +4,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { ipUitHeaders, logActiviteit } from "@/payload/activiteitenlog";
+import { ONDERHOUD_COOKIE, onderhoudToken } from "@/proxy";
 
 export type InlogResultaat = { melding: string };
 
@@ -92,6 +93,15 @@ export async function logInAlsEigenaarAction(
     secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 60 * 60 * 2,
+  });
+
+  // Tijdens onderhoud blijft de site voor de eigenaar gewoon zichtbaar.
+  jar.set(ONDERHOUD_COOKIE, await onderhoudToken(), {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 30,
   });
 
   redirect("/admin");
